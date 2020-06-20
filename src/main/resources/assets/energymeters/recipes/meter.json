@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern":
+  [
+    "xxx",
+    "xax",
+    "xxx"
+  ],
+  "key":
+  {
+    "x":
+    {
+      "type": "forge:ore_dict",
+      "ore": "gemDiamond"
+    },
+    "a":
+    {
+      "item": "minecraft:vine"
+    }
+  },
+  "result":
+  {
+    "item": "energymeters:meter",
+    "count": 1
+  }
+}
