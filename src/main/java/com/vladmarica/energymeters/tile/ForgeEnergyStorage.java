@@ -4,10 +4,10 @@ import net.minecraft.util.EnumFacing;
 import net.minecraftforge.energy.IEnergyStorage;
 
 public class ForgeEnergyStorage implements IEnergyStorage {
-  private TileEntityEnergyMeter tile;
+  private TileEntityEnergyMeterBase tile;
   private EnumFacing side;
 
-  public ForgeEnergyStorage(TileEntityEnergyMeter tile, EnumFacing side) {
+  public ForgeEnergyStorage(TileEntityEnergyMeterBase tile, EnumFacing side) {
     this.tile = tile;
     this.side = side;
   }

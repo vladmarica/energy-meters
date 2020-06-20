@@ -1,6 +1,6 @@
 package com.vladmarica.energymeters.client;
 
-import com.vladmarica.energymeters.tile.TileEntityEnergyMeter;
+import com.vladmarica.energymeters.tile.TileEntityEnergyMeterBase;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
@@ -10,7 +10,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.text.TextFormatting;
 import org.lwjgl.opengl.GL11;
 
-public class EnergyMeterScreenRenderer extends TileEntitySpecialRenderer<TileEntityEnergyMeter> {
+public class EnergyMeterScreenRenderer extends TileEntitySpecialRenderer<TileEntityEnergyMeterBase> {
 
   private static final float PIXEL_WIDTH = 1 / 16F;
   private static float[] FACE_TO_ANGLE = {0, 0, 180, 0, -90, 90};
@@ -22,7 +22,7 @@ public class EnergyMeterScreenRenderer extends TileEntitySpecialRenderer<TileEnt
   private static int disabledTextWidth = -1;
 
   @Override
-  public void render(TileEntityEnergyMeter tile, double x, double y, double z, float partialTicks,
+  public void render(TileEntityEnergyMeterBase tile, double x, double y, double z, float partialTicks,
       int destroyStage, float alpha) {
     super.render(tile, x, y, z, partialTicks, destroyStage, alpha);
 

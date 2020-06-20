@@ -1,13 +1,12 @@
 package com.vladmarica.energymeters.network;
 
 import com.vladmarica.energymeters.EnergyMetersMod;
-import com.vladmarica.energymeters.tile.TileEntityEnergyMeter;
+import com.vladmarica.energymeters.tile.TileEntityEnergyMeterBase;
 import io.netty.buffer.ByteBuf;
 import javax.annotation.Nullable;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
@@ -55,8 +54,8 @@ public class PacketUpdateMeterSides implements IMessage {
         }
 
         TileEntity tile = world.getTileEntity(pos);
-        if (tile instanceof TileEntityEnergyMeter) {
-          ((TileEntityEnergyMeter) tile).handleSideUpdateRequest(message.inputSide, message.outputSide);
+        if (tile instanceof TileEntityEnergyMeterBase) {
+          ((TileEntityEnergyMeterBase) tile).handleSideUpdateRequest(message.inputSide, message.outputSide);
           EnergyMetersMod.LOGGER.info(
               "Recieved PacketUpdateMeterSides for {}", pos);
         } else {

@@ -4,12 +4,11 @@ import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.vladmarica.energymeters.EnergyMetersMod;
 import com.vladmarica.energymeters.Util;
-import com.vladmarica.energymeters.client.Sprites;
 import com.vladmarica.energymeters.energy.EnergyType.EnergyAlias;
 import com.vladmarica.energymeters.network.PacketUpdateMeterConfig;
 import com.vladmarica.energymeters.network.PacketUpdateMeterSides;
+import com.vladmarica.energymeters.tile.TileEntityEnergyMeterBase;
 import com.vladmarica.energymeters.tile.config.EnumRedstoneControlState;
-import com.vladmarica.energymeters.tile.TileEntityEnergyMeter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -51,11 +50,11 @@ public class GuiEnergyMeter extends GuiScreen {
   private GuiButtonEnergyAlias energyAliasButton;
   private GuiButtonConfigEnum<EnumRedstoneControlState> redstoneControlButton;
 
-  private TileEntityEnergyMeter tile;
+  private TileEntityEnergyMeterBase tile;
   private BiMap<RelativeBlockSide, EnumFacing> sideToFaceMap;
   private Map<RelativeBlockSide, GuiButtonSideConfig> sideToButtonMap = new HashMap<>();
 
-  public GuiEnergyMeter(TileEntityEnergyMeter tile) {
+  public GuiEnergyMeter(TileEntityEnergyMeterBase tile) {
     this.tile = tile;
     this.updateSideMapping();
   }

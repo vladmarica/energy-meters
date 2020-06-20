@@ -1,8 +1,7 @@
 package com.vladmarica.energymeters.network;
 
 import com.vladmarica.energymeters.EnergyMetersMod;
-import com.vladmarica.energymeters.energy.EnergyType.EnergyAlias;
-import com.vladmarica.energymeters.tile.TileEntityEnergyMeter;
+import com.vladmarica.energymeters.tile.TileEntityEnergyMeterBase;
 import com.vladmarica.energymeters.tile.config.EnumRedstoneControlState;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.tileentity.TileEntity;
@@ -54,8 +53,8 @@ public class PacketUpdateMeterConfig implements IMessage {
         }
 
         TileEntity tile = world.getTileEntity(pos);
-        if (tile instanceof TileEntityEnergyMeter) {
-          ((TileEntityEnergyMeter) tile).handleConfigUpdateRequest(
+        if (tile instanceof TileEntityEnergyMeterBase) {
+          ((TileEntityEnergyMeterBase) tile).handleConfigUpdateRequest(
               message.redstoneControlState, message.energyAliasIndex);
           EnergyMetersMod.LOGGER.info(
               "Recieved PacketUpdateMeterConfig for {}", pos);

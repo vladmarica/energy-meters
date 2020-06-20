@@ -7,7 +7,7 @@ import com.vladmarica.energymeters.block.Blocks;
 import com.vladmarica.energymeters.client.gui.GuiEnergyMeter;
 import com.vladmarica.energymeters.client.model.EnergyMeterBakedModel;
 import com.vladmarica.energymeters.client.model.TexturedQuadCache;
-import com.vladmarica.energymeters.tile.TileEntityEnergyMeter;
+import com.vladmarica.energymeters.tile.TileEntityEnergyMeterBase;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,7 +46,7 @@ public class ClientProxy extends CommonProxy {
   public void init(FMLInitializationEvent event) {
     super.init(event);
     ClientRegistry.bindTileEntitySpecialRenderer(
-        TileEntityEnergyMeter.class, new EnergyMeterScreenRenderer());
+        TileEntityEnergyMeterBase.class, new EnergyMeterScreenRenderer());
   }
 
   @Override
@@ -61,8 +61,8 @@ public class ClientProxy extends CommonProxy {
     }
 
     TileEntity tile = world.getTileEntity(pos);
-    if (tile instanceof TileEntityEnergyMeter) {
-      Minecraft.getMinecraft().displayGuiScreen(new GuiEnergyMeter((TileEntityEnergyMeter) tile));
+    if (tile instanceof TileEntityEnergyMeterBase) {
+      Minecraft.getMinecraft().displayGuiScreen(new GuiEnergyMeter((TileEntityEnergyMeterBase) tile));
       return true;
     }
 

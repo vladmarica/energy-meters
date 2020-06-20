@@ -1,7 +1,7 @@
 package com.vladmarica.energymeters.network;
 
 import com.vladmarica.energymeters.EnergyMetersMod;
-import com.vladmarica.energymeters.tile.TileEntityEnergyMeter;
+import com.vladmarica.energymeters.tile.TileEntityEnergyMeterBase;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.WorldClient;
@@ -55,8 +55,8 @@ public class PacketEnergyTransferRate implements IMessage {
         }
 
         TileEntity tile = world.getTileEntity(pos);
-        if (tile instanceof TileEntityEnergyMeter) {
-          TileEntityEnergyMeter energyMeterTile = (TileEntityEnergyMeter) tile;
+        if (tile instanceof TileEntityEnergyMeterBase) {
+          TileEntityEnergyMeterBase energyMeterTile = (TileEntityEnergyMeterBase) tile;
           energyMeterTile.setTransferRate(rate);
           energyMeterTile.setTotalEnergyTransferred(totalEnergyTransferred);
 

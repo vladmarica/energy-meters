@@ -4,6 +4,7 @@ import com.vladmarica.energymeters.EnergyMetersMod;
 import com.vladmarica.energymeters.energy.EnergyType;
 import com.vladmarica.energymeters.energy.EnergyType.EnergyAlias;
 import com.vladmarica.energymeters.energy.EnergyTypes;
+import com.vladmarica.energymeters.integration.ComputerComponent;
 import com.vladmarica.energymeters.integration.ModIDs;
 import com.vladmarica.energymeters.MovingAverage;
 import com.vladmarica.energymeters.Util;
@@ -33,77 +34,87 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 
 @Optional.Interface(modid = ModIDs.OPENCOMPUTERS, iface = "li.cil.oc.api.network.SimpleComponent")
-public class TileEntityEnergyMeter extends TileEntity implements ITickable, SimpleComponent {
+public abstract class TileEntityEnergyMeterBase extends TileEntity implements ITickable, SimpleComponent {
 
   /**
    * The maximum distance in blocks from this tile entity that a player has to be to receive
    * an update packet.
     */
-  private static final double PACKET_RANGE = 32;
+  protected static final double PACKET_RANGE = 32;
 
   /**
    * The maximum interval in ticks between {@link PacketEnergyTransferRate} packets that tile entity
    * sends out.
    */
-  private static final double UPDATE_PACKET_MAX_TICK_INTERVAL = 120;
+  protected static final double UPDATE_PACKET_MAX_TICK_INTERVAL = 120;
 
   /**
    * The minimum interval in ticks between {@link PacketEnergyTransferRate} packets that tile entity
    * sends out. For example, if this value is {@code 4}, this tile entity will wait at least
    * {@code 4} ticks between packets.
    */
-  private static final double UPDATE_PACKET_MIN_TICK_INTERVAL = 4;
+  protected static final double UPDATE_PACKET_MIN_TICK_INTERVAL = 4;
 
   /** The name of this component as it appears to mods like OpenComputers and ComputerCraft. */
-  private static final String COMPUTER_COMPONENT_NAME = "energy-meter";
+  protected static final String COMPUTER_COMPONENT_NAME = "energy-meter";
 
-  private static final String NBT_CONNECTED_KEY = "connected";
-  private static final String NBT_POWERED_KEY = "powered";
-  private static final String NBT_INPUT_SIDE_KEY = "input-side";
-  private static final String NBT_OUTPUT_SIDE_KEY = "output-side";
-  private static final String NBT_TOTAL_ENERGY_TRANSFERRED_KEY = "total-energy-transferred";
-  private static final String NBT_REDSTONE_CONTROL_STATE = "redstone-control-state";
-  private static final String NBT_ENERGY_ALIAS = "energy-alias";
+  protected static final String NBT_CONNECTED_KEY = "connected";
+  protected static final String NBT_POWERED_KEY = "powered";
+  protected static final String NBT_INPUT_SIDE_KEY = "input-side";
+  protected static final String NBT_OUTPUT_SIDE_KEY = "output-side";
+  protected static final String NBT_TOTAL_ENERGY_TRANSFERRED_KEY = "total-energy-transferred";
+  protected static final String NBT_REDSTONE_CONTROL_STATE = "redstone-control-state";
+  protected static final String NBT_ENERGY_ALIAS = "energy-alias";
 
-  private static final String NBT_OWNER_UUID = "owner-uuid";
-  private static final String NBT_OWNER_USERNAME = "owner-username";
+  protected static final String NBT_OWNER_UUID = "owner-uuid";
+  protected static final String NBT_OWNER_USERNAME = "owner-username";
 
-  private int ticks = 0;
-  private long totalEnergyTransferred = 0;
-  private long totalEnergyTransferredLastTick = 0;
-  private float transferRate = 0;
-  private float lastTransferRateSent = 0;
-  private int ticksSinceLastTransferRatePacket = 0;
+  protected int ticks = 0;
+  protected long totalEnergyTransferred = 0;
+  protected long totalEnergyTransferredLastTick = 0;
+  protected float transferRate = 0;
+  protected float lastTransferRateSent = 0;
+  protected int ticksSinceLastTransferRatePacket = 0;
 
-  private final EnergyType energyType = EnergyTypes.FE;
-  private boolean saved = false;
+  protected EnergyType energyType;
+  protected boolean saved = false;
 
   /**
    * True if this meter is fully connected, meaning that it has a valid {@link IEnergyStorage}
    * connected to the input and output sides.
    */
-  private boolean fullyConnected = false;
+  protected boolean fullyConnected = false;
 
   /** True if this tile entity's block is currently receiving redstone power */
-  private boolean powered = false;
+  protected boolean powered = false;
 
-  private MovingAverage transferRateMovingAverage = new MovingAverage(10);
+  protected MovingAverage transferRateMovingAverage = new MovingAverage(10);
 
-  private EnumFacing screenSide = EnumFacing.NORTH;
-
-  @Nullable
-  private EnumFacing inputSide;
+  protected EnumFacing screenSide = EnumFacing.NORTH;
 
   @Nullable
-  private EnumFacing outputSide;
+  protected EnumFacing inputSide;
 
-  private EnumRedstoneControlState redstoneControlState = EnumRedstoneControlState.ACTIVE;
-  private EnergyAlias energyAlias = this.energyType.getDefaultAlias();
+  @Nullable
+  protected EnumFacing outputSide;
 
-  private ForgeEnergyStorage inputEnergyStorage;
-  private ForgeEnergyStorage outputEnergyStorage;
+  protected EnumRedstoneControlState redstoneControlState = EnumRedstoneControlState.ACTIVE;
+  protected EnergyAlias energyAlias;
 
-  private TargetPoint packetTargetPoint;
+  protected TargetPoint packetTargetPoint;
+
+  private ComputerComponent computerComponent;
+
+  public TileEntityEnergyMeterBase(EnergyType energyType) {
+    this.energyType = energyType;
+    this.energyAlias = energyType.getDefaultAlias();
+    this.computerComponent = new ComputerComponent(this);
+  }
+
+  @Nullable
+  public ComputerComponent getComputerComponent() {
+    return this.computerComponent;
+  }
 
   @Override
   public void readFromNBT(NBTTagCompound tag) {
@@ -136,6 +147,7 @@ public class TileEntityEnergyMeter extends TileEntity implements ITickable, Simp
     tag.setBoolean(NBT_POWERED_KEY, this.powered);
     tag.setByte(NBT_INPUT_SIDE_KEY, BufferUtil.encodeNullableFace(this.inputSide));
     tag.setByte(NBT_OUTPUT_SIDE_KEY, BufferUtil.encodeNullableFace(this.outputSide));
+    tag.setLong(NBT_TOTAL_ENERGY_TRANSFERRED_KEY, this.totalEnergyTransferred);
     tag.setInteger(NBT_REDSTONE_CONTROL_STATE, this.redstoneControlState.ordinal());
     tag.setInteger(NBT_ENERGY_ALIAS, this.energyAlias.getIndex());
     return tag;
@@ -147,6 +159,7 @@ public class TileEntityEnergyMeter extends TileEntity implements ITickable, Simp
     this.powered = tag.getBoolean(NBT_POWERED_KEY);
     this.inputSide = BufferUtil.decodeNullableFace(tag.getByte(NBT_INPUT_SIDE_KEY));
     this.outputSide = BufferUtil.decodeNullableFace(tag.getByte(NBT_OUTPUT_SIDE_KEY));
+    this.totalEnergyTransferred = tag.getLong(NBT_TOTAL_ENERGY_TRANSFERRED_KEY);
     this.redstoneControlState = EnumRedstoneControlState.values()[tag.getInteger(NBT_REDSTONE_CONTROL_STATE)];
     this.energyAlias = energyType.getAlias(tag.getInteger(NBT_ENERGY_ALIAS));
   }
@@ -192,8 +205,6 @@ public class TileEntityEnergyMeter extends TileEntity implements ITickable, Simp
     }
 
     if (!this.world.isRemote) {
-      this.inputEnergyStorage = new ForgeEnergyStorage(this, inputSide);
-      this.outputEnergyStorage = new ForgeEnergyStorage(this, outputSide);
       this.packetTargetPoint = new NetworkRegistry.TargetPoint(
           this.world.provider.getDimension(),
           this.pos.getX(),
@@ -403,8 +414,6 @@ public class TileEntityEnergyMeter extends TileEntity implements ITickable, Simp
 
     this.setInputSide(inputSide);
     this.setOutputSide(outputSide);
-    this.inputEnergyStorage = new ForgeEnergyStorage(this, inputSide);
-    this.outputEnergyStorage = new ForgeEnergyStorage(this, outputSide);
 
     this.checkConnections();
     this.markDirty();
@@ -456,28 +465,7 @@ public class TileEntityEnergyMeter extends TileEntity implements ITickable, Simp
     return side == this.inputSide && this.isFullyConnected() && !this.isDisabled();
   }
 
-  @Override
-  public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
-    if (capability == CapabilityEnergy.ENERGY && facing != null && doesSideAcceptConnection(facing)) {
-      return true;
-    }
-    return super.hasCapability(capability, facing);
-  }
-
-  @Override
-  public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
-    if (capability == CapabilityEnergy.ENERGY && facing != null && doesSideAcceptConnection(facing)) {
-      if (facing == inputSide) {
-        return CapabilityEnergy.ENERGY.cast(this.inputEnergyStorage);
-      } else if (facing == outputSide) {
-        return CapabilityEnergy.ENERGY.cast(this.outputEnergyStorage);
-      }
-      throw new RuntimeException("Attempted to get energy capability for invalid side: " + facing);
-    }
-    return super.getCapability(capability, facing);
-  }
-
-  private boolean doesSideAcceptConnection(EnumFacing facing) {
+  protected boolean doesSideAcceptConnection(EnumFacing facing) {
     return facing == this.inputSide || facing == this.outputSide;
   }
 
@@ -486,37 +474,43 @@ public class TileEntityEnergyMeter extends TileEntity implements ITickable, Simp
   @Optional.Method(modid = ModIDs.OPENCOMPUTERS)
   @Override
   public String getComponentName() {
-    return COMPUTER_COMPONENT_NAME;
+    return ComputerComponent.COMPONENT_NAME;
   }
 
   @Optional.Method(modid = ModIDs.OPENCOMPUTERS)
-  @Callback(doc = "function():number -- gets the current average energy transfer rate for this meter")
+  @Callback(doc = "function():number -- gets the current average energy transfer rate per tick")
   public Object[] getTransferRate(final Context context, final Arguments args) throws Exception {
-    return new Object[] { this.transferRate };
+    return this.computerComponent.getTransferRate();
   }
 
   @Optional.Method(modid = ModIDs.OPENCOMPUTERS)
   @Callback(doc = "function():number -- gets the total energy transferred though this meter")
   public Object[] getTotalEnergyTransferred(final Context context, final Arguments args) throws Exception {
-    return new Object[] { this.totalEnergyTransferred };
+    return this.computerComponent.getTotalEnergyTransferred();
   }
 
   @Optional.Method(modid = ModIDs.OPENCOMPUTERS)
   @Callback(doc = "function():string -- returns the status of this meter, either \"active\", \"not_connected\", or \"disabled\"")
   public Object[] getStatus(final Context context, final Arguments args) throws Exception {
-    String statusString = "active";
-    if (!this.isFullyConnected()) {
-      statusString = "not connected";
-    } else if (this.isDisabled()) {
-      statusString = "disabled";
-    }
-    return new Object[] { statusString };
+    return this.computerComponent.getStatus();
   }
 
   @Optional.Method(modid = ModIDs.OPENCOMPUTERS)
-  @Callback(doc = "function():string -- returns the current redstone control state of this meter")
+  @Callback(doc = "function():string -- returns the current redstone control state")
   public Object[] getRedstoneControlState(final Context context, final Arguments args) throws Exception {
-    return new Object[] { this.redstoneControlState.getDescription() };
+    return new Object[] { this.computerComponent.getRedstoneControlState() };
+  }
+
+  @Optional.Method(modid = ModIDs.OPENCOMPUTERS)
+  @Callback(doc = "function():string -- returns the energy type, such as \"FE\" or \"MJ\"")
+  public Object[] getEnergyType(final Context context, final Arguments args) throws Exception {
+    return new Object[] { this.computerComponent.getEnergyType() };
+  }
+
+  @Optional.Method(modid = ModIDs.OPENCOMPUTERS)
+  @Callback(doc = "function():string -- returns the current energy type alias, such as \"RF\"")
+  public Object[] getEnergyTypeAlias(final Context context, final Arguments args) throws Exception {
+    return new Object[] { this.computerComponent.getEnergyTypeAlias() };
   }
 
   // End OpenComputers SimpleComponent Implementation
