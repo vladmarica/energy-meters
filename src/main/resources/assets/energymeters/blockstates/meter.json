@@ -6,6 +6,13 @@
   "variants": {
     "normal": [{}],
     "inventory": [{}],
+    "inventory_fe": [{}],
+    "inventory_mj": [{
+      "model": "energymeters:meter_mj"
+    }],
+    "inventory_eu": [{
+      "model": "energymeters:meter_eu"
+    }],
     "facing": {
       "north": {},
       "south": {},
@@ -15,7 +22,13 @@
       "down": {}
     },
     "type": {
-      "fe": {}
+      "fe": {},
+      "mj": {
+        "model": "energymeters:meter_mj"
+      },
+      "eu": {
+        "model": "energymeters:meter_eu"
+      }
     }
   }
 }
