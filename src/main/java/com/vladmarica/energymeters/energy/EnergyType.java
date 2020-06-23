@@ -4,12 +4,14 @@ import com.google.common.collect.ImmutableList;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 public abstract class EnergyType {
 
   protected String name;
   protected String description;
   protected List<EnergyAlias> aliases;
+  private String aliasesDisplayString = null;
 
   EnergyType(String name, String description) {
     this.name = name;
@@ -47,6 +49,26 @@ public abstract class EnergyType {
   public EnergyAlias getDefaultAlias() {
     return this.aliases.get(0);
   }
+
+  /**
+   * Returns a String representing all aliases for this energy type. Only aliases that are available
+   * are included. For example, if this energy type is "FE", then this method can return
+   * "FE/RF/µI".
+   */
+  public String getAliasesDisplayString() {
+    if (this.aliasesDisplayString != null) {
+      return this.aliasesDisplayString;
+    }
+
+    this.aliasesDisplayString = this.getAliases().stream()
+        .filter(EnergyAlias::isAvailable)
+        .map(EnergyAlias::getDisplayName)
+        .collect(Collectors.joining("/"));
+
+    return this.aliasesDisplayString;
+  }
+
+  public abstract boolean isAvailable();
 
   public static class EnergyAlias {
     private EnergyType type;

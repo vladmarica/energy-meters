@@ -3,6 +3,8 @@ package com.vladmarica.energymeters.client;
 import com.google.common.collect.Iterators;
 import com.vladmarica.energymeters.CommonProxy;
 import com.vladmarica.energymeters.EnergyMetersMod;
+import com.vladmarica.energymeters.block.BlockEnergyMeter;
+import com.vladmarica.energymeters.block.BlockEnergyMeter.MeterType;
 import com.vladmarica.energymeters.block.Blocks;
 import com.vladmarica.energymeters.client.gui.GuiEnergyMeter;
 import com.vladmarica.energymeters.client.model.EnergyMeterBakedModel;
@@ -85,24 +87,44 @@ public class ClientProxy extends CommonProxy {
         .getBlockStateMapper()
         .getVariants(Blocks.ENERGY_METER);
 
-    IBlockState state = Iterators.get(variantToModelMap.keySet().iterator(), 0);
-    IBakedModel model = event.getModelRegistry().getObject(variantToModelMap.get(state));
+    // Find one blockstate for each meter type (doesn't matter which one)
+    Map<MeterType, IBlockState> meterTypeToStateMap = new HashMap<>();
+    for (IBlockState state : variantToModelMap.keySet()) {
+      MeterType type = state.getValue(BlockEnergyMeter.PROP_TYPE);
+      if (!meterTypeToStateMap.containsKey(type)) {
+        meterTypeToStateMap.put(type, state);
+      }
+    }
+
 
     Map<EnumFacing, BakedQuad> cubeQuadMap = new HashMap<>();
     Map<ResourceLocation, TextureAtlasSprite> spriteMap = new HashMap<>();
+    IBakedModel originalModel = null;
 
     // Extract textured quads from default model
-    for (EnumFacing side : EnumFacing.values()) {
-      List<BakedQuad> quads = model.getQuads(state, side, 0);
-      BakedQuad quad = Iterators.getOnlyElement(quads.iterator());
-      EnergyMetersMod.LOGGER.debug("Side {} has texture {}", side.getName(), quad.getSprite());
+    for (Map.Entry<MeterType, IBlockState> meterTypeStatePair : meterTypeToStateMap.entrySet()) {
+      IBlockState state = meterTypeStatePair.getValue();
+      ModelResourceLocation modelLocation = variantToModelMap.get(state);
+      IBakedModel model = event.getModelRegistry().getObject(modelLocation);
 
-      ResourceLocation spriteLocation = new ResourceLocation(quad.getSprite().getIconName());
-      if (!spriteMap.containsKey(spriteLocation)) {
-        spriteMap.put(spriteLocation, quad.getSprite());
+      if (originalModel == null) {
+        originalModel = model;
       }
 
-      cubeQuadMap.put(side, quad);
+      EnergyMetersMod.LOGGER.debug("Extracting textures for meter type {}", meterTypeStatePair.getKey());
+
+      for (EnumFacing side : EnumFacing.values()) {
+        List<BakedQuad> quads = model.getQuads(state, side, 0);
+        BakedQuad quad = Iterators.getOnlyElement(quads.iterator());
+        EnergyMetersMod.LOGGER.debug("Side {} has texture {}", side.getName(), quad.getSprite());
+
+        ResourceLocation spriteLocation = new ResourceLocation(quad.getSprite().getIconName());
+        if (!spriteMap.containsKey(spriteLocation)) {
+          spriteMap.put(spriteLocation, quad.getSprite());
+        }
+
+        cubeQuadMap.put(side, quad);
+      }
     }
 
     // Store cube quads and textures in the cache
@@ -111,7 +133,7 @@ public class ClientProxy extends CommonProxy {
 
     // Override the energy meter models with the custom baked model
     for (Map.Entry<IBlockState, ModelResourceLocation> entry : variantToModelMap.entrySet()) {
-      event.getModelRegistry().putObject(entry.getValue(), new EnergyMeterBakedModel(model));
+      event.getModelRegistry().putObject(entry.getValue(), new EnergyMeterBakedModel(originalModel));
     }
   }
 }

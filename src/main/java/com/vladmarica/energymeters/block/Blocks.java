@@ -24,11 +24,9 @@ public final class Blocks {
 
   @SubscribeEvent
   public static void onRegisterItemsEvent(RegistryEvent.Register<Item> event) {
-    event.getRegistry().register(createItemBlock(ENERGY_METER));
-  }
-
-  private static Item createItemBlock(BlockBase block) {
-    return new ItemBlock(block).setRegistryName(block.getRegistryName());
+    event.getRegistry().register(
+        new ItemBlockEnergyMeter(ENERGY_METER)
+            .setRegistryName(ENERGY_METER.getRegistryName()));
   }
 
   private Blocks() {}

@@ -23,7 +23,6 @@ public abstract class BlockBase extends Block {
     setUnlocalizedName(String.format("%s.%s", EnergyMetersMod.MODID, name));
 
     setHardness(1F);
-    setCreativeTab(CreativeTabs.TOOLS);
   }
 
   /*
@@ -41,10 +40,5 @@ public abstract class BlockBase extends Block {
   @Override
   public boolean getWeakChanges(IBlockAccess world, BlockPos pos) {
     return super.getWeakChanges(world, pos);
-  }
-
-  @SideOnly(Side.CLIENT)
-  public void registerItemModel(Item item) {
-    ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(getRegistryName(), "inventory"));
   }
 }

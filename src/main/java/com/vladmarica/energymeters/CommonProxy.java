@@ -3,7 +3,9 @@ package com.vladmarica.energymeters;
 import com.vladmarica.energymeters.integration.ComputerCraftIntegration;
 import com.vladmarica.energymeters.integration.ModIDs;
 import com.vladmarica.energymeters.network.Packets;
+import com.vladmarica.energymeters.tile.TileEntityEnergyMeterEU;
 import com.vladmarica.energymeters.tile.TileEntityEnergyMeterFE;
+import com.vladmarica.energymeters.tile.TileEntityEnergyMeterMJ;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -22,6 +24,12 @@ public class CommonProxy {
     GameRegistry.registerTileEntity(
         TileEntityEnergyMeterFE.class,
         new ResourceLocation(EnergyMetersMod.MODID, "te_energy_meter_fe"));
+    GameRegistry.registerTileEntity(
+        TileEntityEnergyMeterMJ.class,
+        new ResourceLocation(EnergyMetersMod.MODID, "te_energy_meter_mj"));
+    GameRegistry.registerTileEntity(
+        TileEntityEnergyMeterEU.class,
+        new ResourceLocation(EnergyMetersMod.MODID, "te_energy_meter_eu"));
 
     // Register network packets
     Packets.register();

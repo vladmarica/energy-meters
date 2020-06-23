@@ -9,4 +9,9 @@ public class EnergyTypeFE extends EnergyType {
     this.addAlias("RF", "Redstone Flux");
     this.addAlias("µI", "Micro Infinity", () -> Loader.isModLoaded(ModIDs.ENDERIO));
   }
+
+  @Override
+  public boolean isAvailable() {
+    return true;
+  }
 }

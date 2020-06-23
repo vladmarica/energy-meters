@@ -1,10 +1,15 @@
 package com.vladmarica.energymeters.block;
 
+import com.google.common.collect.ImmutableList;
 import com.vladmarica.energymeters.EnergyMetersMod;
+import com.vladmarica.energymeters.energy.EnergyType;
+import com.vladmarica.energymeters.energy.EnergyTypes;
 import com.vladmarica.energymeters.properties.UnlistedPropertyBoolean;
 import com.vladmarica.energymeters.properties.UnlistedPropertyFacing;
 import com.vladmarica.energymeters.tile.TileEntityEnergyMeterBase;
+import com.vladmarica.energymeters.tile.TileEntityEnergyMeterEU;
 import com.vladmarica.energymeters.tile.TileEntityEnergyMeterFE;
+import com.vladmarica.energymeters.tile.TileEntityEnergyMeterMJ;
 import javax.annotation.Nullable;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
@@ -14,19 +19,28 @@ import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.block.statemap.DefaultStateMapper;
+import net.minecraft.client.renderer.block.statemap.StateMapperBase;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.IStringSerializable;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.property.ExtendedBlockState;
 import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class BlockEnergyMeter extends BlockBase {
 
@@ -40,6 +54,7 @@ public class BlockEnergyMeter extends BlockBase {
 
   public BlockEnergyMeter() {
     super(Material.IRON, NAME);
+
     this.setSoundType(SoundType.METAL);
 
     this.setDefaultState(blockState.getBaseState()
@@ -47,6 +62,7 @@ public class BlockEnergyMeter extends BlockBase {
         .withProperty(PROP_TYPE, MeterType.FE_METER));
 
     this.setHarvestLevel("pickaxe", 0);
+    this.setCreativeTab(CreativeTabs.SEARCH);
   }
 
   @Override
@@ -56,6 +72,10 @@ public class BlockEnergyMeter extends BlockBase {
     switch (type) {
       case FE_METER:
         return new TileEntityEnergyMeterFE();
+      case MJ_METER:
+        return new TileEntityEnergyMeterMJ();
+      case EU_METER:
+        return new TileEntityEnergyMeterEU();
       default:
         EnergyMetersMod.LOGGER.error("Attempted to create tile entity for invalid type {}", type.getName());
     }
@@ -80,9 +100,16 @@ public class BlockEnergyMeter extends BlockBase {
   }
 
   @Override
+  public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing facing,
+      float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
+    MeterType meterType = MeterType.values()[meta];
+    return this.getDefaultState().withProperty(PROP_TYPE, meterType);
+  }
+
+  @Override
   public IBlockState getStateFromMeta(int meta) {
     int facingIndex = meta & 0b11;
-    int typeIndex = (meta & 0b0011) >> 2;
+    int typeIndex = (meta & 0b1100) >> 2;
     return getDefaultState()
         .withProperty(PROP_FACING, EnumFacing.getHorizontal(facingIndex))
         .withProperty(PROP_TYPE, MeterType.values()[typeIndex]);
@@ -142,29 +169,59 @@ public class BlockEnergyMeter extends BlockBase {
   }
 
   @Override
+  public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX,
+      float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand) {
+    return super.getStateForPlacement(world, pos, facing, hitX, hitY, hitZ, meta, placer, hand);
+  }
+
+  @Override
   public boolean canConnectRedstone(IBlockState state, IBlockAccess world, BlockPos pos,
       @Nullable EnumFacing side) {
     return side != null && side != state.getValue(PROP_FACING).getOpposite();
   }
 
+  @Override
+  public void getSubBlocks(CreativeTabs tabs, NonNullList<ItemStack> items) {
+    for (MeterType type : MeterType.values()) {
+      if (type.getEnergyType().isAvailable()) {
+        items.add(new ItemStack(this, 1, type.getIndex()));
+      }
+    }
+  }
+
+  @SideOnly(Side.CLIENT)
+  public void registerItemModel(Item item) {
+    for (MeterType type : MeterType.values()) {
+      ModelLoader.setCustomModelResourceLocation(item, type.getIndex(),
+          new ModelResourceLocation(
+              getRegistryName(), "inventory_" + type.getName()));
+    }
+  }
+
   public enum MeterType implements IStringSerializable  {
-    FE_METER(0, "fe");
+    FE_METER(0, EnergyTypes.FE),
+    MJ_METER(1, EnergyTypes.MJ),
+    EU_METER(2, EnergyTypes.EU);
 
     private int index;
-    private String name;
+    private EnergyType type;
 
-    MeterType(int index, String name) {
+    MeterType(int index, EnergyType type) {
       this.index = index;
-      this.name = name;
+      this.type = type;
     }
 
     public int getIndex() {
       return this.index;
     }
 
+    public EnergyType getEnergyType() {
+      return this.type;
+    }
+
     @Override
     public String getName() {
-      return this.name;
+      return this.type.getName().toLowerCase();
     }
   }
 }

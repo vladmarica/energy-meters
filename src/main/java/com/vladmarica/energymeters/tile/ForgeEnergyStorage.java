@@ -1,44 +1,45 @@
 package com.vladmarica.energymeters.tile;
 
+import com.vladmarica.energymeters.energy.IEnergyMeter;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.energy.IEnergyStorage;
 
 public class ForgeEnergyStorage implements IEnergyStorage {
-  private TileEntityEnergyMeterBase tile;
+  private IEnergyMeter meter;
   private EnumFacing side;
 
-  public ForgeEnergyStorage(TileEntityEnergyMeterBase tile, EnumFacing side) {
-    this.tile = tile;
+  public ForgeEnergyStorage(IEnergyMeter meter, EnumFacing side) {
+    this.meter = meter;
     this.side = side;
   }
 
   @Override
-  public int receiveEnergy(int maxReceive, boolean simulate) {
-    return this.tile.receiveEnergy(maxReceive, simulate, this.side);
+  public int receiveEnergy(int amount, boolean simulate) {
+    return (int) this.meter.receiveEnergy(amount, simulate, this.side);
   }
 
   @Override
   public int extractEnergy(int maxExtract, boolean simulate) {
-    return this.tile.extractEnergy(maxExtract, simulate, this.side);
+    return 0;
   }
 
   @Override
   public int getEnergyStored() {
-    return this.tile.getEnergyStored(this.side);
+    return 0;
   }
 
   @Override
   public int getMaxEnergyStored() {
-    return this.tile.getMaxEnergyStored(this.side);
+    return 0;
   }
 
   @Override
   public boolean canExtract() {
-    return this.tile.canExtract(this.side);
+    return false;
   }
 
   @Override
   public boolean canReceive() {
-    return this.tile.canReceive(this.side);
+    return this.meter.canReceiveEnergy(this.side);
   }
 }

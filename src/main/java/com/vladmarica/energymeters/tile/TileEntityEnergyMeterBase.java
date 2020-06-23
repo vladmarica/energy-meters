@@ -3,7 +3,7 @@ package com.vladmarica.energymeters.tile;
 import com.vladmarica.energymeters.EnergyMetersMod;
 import com.vladmarica.energymeters.energy.EnergyType;
 import com.vladmarica.energymeters.energy.EnergyType.EnergyAlias;
-import com.vladmarica.energymeters.energy.EnergyTypes;
+import com.vladmarica.energymeters.energy.IEnergyMeter;
 import com.vladmarica.energymeters.integration.ComputerComponent;
 import com.vladmarica.energymeters.integration.ModIDs;
 import com.vladmarica.energymeters.MovingAverage;
@@ -26,15 +26,15 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.energy.CapabilityEnergy;
+import net.minecraft.world.World;
 import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 
 @Optional.Interface(modid = ModIDs.OPENCOMPUTERS, iface = "li.cil.oc.api.network.SimpleComponent")
-public abstract class TileEntityEnergyMeterBase extends TileEntity implements ITickable, SimpleComponent {
+public abstract class TileEntityEnergyMeterBase extends TileEntity implements ITickable,
+    IEnergyMeter, SimpleComponent {
 
   /**
    * The maximum distance in blocks from this tile entity that a player has to be to receive
@@ -294,38 +294,23 @@ public abstract class TileEntityEnergyMeterBase extends TileEntity implements IT
     return !this.redstoneControlState.isMachineEnabled(this.powered);
   }
 
-  private void checkConnections() {
-    boolean connected = false;
-
-    if (this.inputSide != null && this.outputSide != null) {
-      BlockPos inputNeighbor = this.pos.offset(this.inputSide);
-      BlockPos outputNeightbor = this.pos.offset(this.outputSide);
-
-      IEnergyStorage inputEnergyStorage = Util.getEnergyStorage(world, inputNeighbor, this.inputSide.getOpposite());
-      IEnergyStorage outputEnergyStorage = Util.getEnergyStorage(world, outputNeightbor, this.outputSide.getOpposite());
-
-      connected = inputEnergyStorage != null
-          && outputEnergyStorage != null
-          && outputEnergyStorage.canReceive();
-    }
-
-    if (connected != this.fullyConnected) {
-      IBlockState currentBlockState = this.world.getBlockState(this.pos);
-      this.fullyConnected = connected;
-      this.world.notifyBlockUpdate(this.pos, currentBlockState, currentBlockState, 3);
-    }
+  protected void notifyUpdate() {
+    IBlockState currentBlockState = this.world.getBlockState(this.pos);
+    this.world.notifyBlockUpdate(this.pos, currentBlockState, currentBlockState, 3);
+    this.world.notifyNeighborsOfStateChange(this.pos, Blocks.ENERGY_METER, false);
   }
+
+  protected abstract void checkConnections();
 
   /**
    * Checks if this tile entity's block is powered. If the powered state has changed, then a block
    * update is triggered.
    */
-  private void checkRedstone() {
+  protected void checkRedstone() {
     boolean newPowered = this.world.isBlockPowered(this.pos);
     if (newPowered != this.powered) {
-      IBlockState currentBlockState = this.world.getBlockState(this.pos);
       this.powered = newPowered;
-      this.world.notifyBlockUpdate(this.pos, currentBlockState, currentBlockState, 3);
+      this.notifyUpdate();
     }
   }
 
@@ -336,24 +321,6 @@ public abstract class TileEntityEnergyMeterBase extends TileEntity implements IT
 
     this.checkConnections();
     this.checkRedstone();
-  }
-
-  public int receiveEnergy(int maxReceive, boolean simulate, EnumFacing side) {
-    if (!isFullyConnected() || side != this.inputSide || this.isDisabled()) {
-      return 0;
-    }
-
-    int amountReceived;
-    BlockPos outputBlockPos = this.pos.add(this.outputSide.getDirectionVec());
-    IEnergyStorage adjacentEnergyStorage = Util.getEnergyStorage(this.world, outputBlockPos, outputSide.getOpposite());
-    if (adjacentEnergyStorage != null) {
-      amountReceived = adjacentEnergyStorage.receiveEnergy(maxReceive, simulate);;
-    } else {
-      amountReceived = 0;
-    }
-
-    this.totalEnergyTransferred += amountReceived;
-    return amountReceived;
   }
 
   /** Sets the current FE transfer rate for this meter. This method should only be used client-side
@@ -439,26 +406,11 @@ public abstract class TileEntityEnergyMeterBase extends TileEntity implements IT
 
     IBlockState state = this.world.getBlockState(this.pos);
     this.world.notifyBlockUpdate(pos, state, state, 3);
+    this.world.notifyNeighborsOfStateChange(this.pos, Blocks.ENERGY_METER, false);
   }
 
   public boolean isFullyConnected() {
     return this.fullyConnected;
-  }
-
-  public int extractEnergy(int maxExtract, boolean simulate, EnumFacing side) {
-    return 0;
-  }
-
-  public int getEnergyStored(EnumFacing side) {
-    return 0;
-  }
-
-  public int getMaxEnergyStored(EnumFacing side) {
-    return 0;
-  }
-
-  public boolean canExtract(EnumFacing side) {
-    return false;
   }
 
   public boolean canReceive(EnumFacing side) {
@@ -469,8 +421,21 @@ public abstract class TileEntityEnergyMeterBase extends TileEntity implements IT
     return facing == this.inputSide || facing == this.outputSide;
   }
 
-  // OpenComputers SimpleComponent Implementation
+  // IMeter implementation
 
+  @Override
+  public BlockPos getPosition() {
+    return this.pos;
+  }
+
+  @Override
+  public World getWorldObj() {
+    return this.world;
+  }
+
+  // End IMeter implementation
+
+  // OpenComputers SimpleComponent implementation
   @Optional.Method(modid = ModIDs.OPENCOMPUTERS)
   @Override
   public String getComponentName() {
@@ -512,6 +477,5 @@ public abstract class TileEntityEnergyMeterBase extends TileEntity implements IT
   public Object[] getEnergyTypeAlias(final Context context, final Arguments args) throws Exception {
     return new Object[] { this.computerComponent.getEnergyTypeAlias() };
   }
-
-  // End OpenComputers SimpleComponent Implementation
+  // End OpenComputers SimpleComponent implementation
 }

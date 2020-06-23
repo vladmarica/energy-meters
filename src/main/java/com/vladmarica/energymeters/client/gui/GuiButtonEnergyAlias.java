@@ -16,6 +16,10 @@ public class GuiButtonEnergyAlias extends GuiButton {
   public GuiButtonEnergyAlias(int buttonId, int x, int y, EnergyAlias alias) {
     super(buttonId, x, y, SIZE, SIZE, alias.getDisplayName());
     this.alias = alias;
+
+    if (alias.getEnergyType().getAliases().size() == 1) {
+      this.enabled = false;
+    }
   }
 
   public EnergyAlias cycle() {

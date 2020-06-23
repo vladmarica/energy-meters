@@ -1,6 +1,7 @@
 package com.vladmarica.energymeters.client;
 
 import com.vladmarica.energymeters.tile.TileEntityEnergyMeterBase;
+import java.text.NumberFormat;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
@@ -73,7 +74,7 @@ public class EnergyMeterScreenRenderer extends TileEntitySpecialRenderer<TileEnt
     if (tile.isDisabled()) {
       fontRenderer.drawString(DISABLED_TEXT, (SCREEN_SIZE - disabledTextWidth) / 2, 20, WHITE);
     } else {
-      String displayText = Float.toString(tile.getTransferRate());
+      String displayText = formatRate(tile.getTransferRate());
       int displayTextWidth = fontRenderer.getStringWidth(displayText);
       fontRenderer.drawString(TextFormatting.WHITE + displayText, (SCREEN_SIZE - displayTextWidth) / 2, 15, WHITE);
       fontRenderer.drawString(TextFormatting.WHITE + tile.getEnergyAlias().getDisplayName() + "/t", (SCREEN_SIZE - 22) / 2, 25, WHITE);
@@ -84,5 +85,13 @@ public class EnergyMeterScreenRenderer extends TileEntitySpecialRenderer<TileEnt
     GlStateManager.disableBlend();
     GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
     GlStateManager.popMatrix();
+  }
+
+  private static String formatRate(float rate) {
+      if (rate < 1000) return String.format("%.1f", rate);
+      int exp = (int) (Math.log(rate) / Math.log(1000));
+      return String.format("%.1f%c",
+          rate / Math.pow(1000, exp),
+          "KMBTQ".charAt(exp - 1));
   }
 }
