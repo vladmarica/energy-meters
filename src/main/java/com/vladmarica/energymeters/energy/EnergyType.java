@@ -70,6 +70,8 @@ public abstract class EnergyType {
 
   public abstract boolean isAvailable();
 
+  public abstract boolean isLimitable();
+
   public static class EnergyAlias {
     private EnergyType type;
     private int index;

@@ -8,7 +8,7 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.text.TextFormatting;
 
-public class GuiButtonEnergyAlias extends GuiButton {
+public class GuiButtonEnergyAlias extends GuiButton implements IHasTooltip {
   private static final int SIZE = 20;
 
   private EnergyAlias alias;
@@ -35,12 +35,14 @@ public class GuiButtonEnergyAlias extends GuiButton {
     return this.alias;
   }
 
-  public void drawTooltip(GuiScreen gui, int mouseX, int mouseY) {
-    gui.drawHoveringText(
-        ImmutableList.of(
-            "Display Alias",
-            TextFormatting.GRAY + this.alias.getDisplayName() + " (" + this.alias.getDescription() + ")"),
-        mouseX,
-        mouseY);
+  public EnergyAlias getAlias() {
+    return this.alias;
+  }
+
+  @Override
+  public List<String> getTooltipLines() {
+    return ImmutableList.of(
+        "Display Alias",
+        TextFormatting.GRAY + this.alias.getDisplayName() + " (" + this.alias.getDescription() + ")");
   }
 }

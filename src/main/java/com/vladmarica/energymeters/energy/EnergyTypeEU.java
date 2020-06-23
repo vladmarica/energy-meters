@@ -12,4 +12,9 @@ public class EnergyTypeEU extends EnergyType {
   public boolean isAvailable() {
     return Loader.isModLoaded(ModIDs.IC2);
   }
+
+  @Override
+  public boolean isLimitable() {
+    return false;
+  }
 }

@@ -11,4 +11,5 @@ public class Sprites {
   public static final Sprite REDSTONE_DISABLED = new Sprite(SPRITE_MAP_TEXTURE, 0);
   public static final Sprite REDSTONE_ACTIVE = new Sprite(SPRITE_MAP_TEXTURE, 1);
   public static final Sprite REDSTONE_INVERTED = new Sprite(SPRITE_MAP_TEXTURE, 2);
+  public static final Sprite SPECTRAL_ARROW = new Sprite(SPRITE_MAP_TEXTURE, 3);
 }

@@ -8,42 +8,34 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.text.TextFormatting;
 
-public class GuiButtonConfigEnum<T extends Enum<T> & IConfigEnum> extends GuiButton {
-  private static final int SIZE = 20;
+public class GuiButtonConfigEnum<T extends Enum<T> & IConfigEnum> extends GuiIconButton implements IHasTooltip {
   private T value;
   private List<T> possibleValues;
   private String title;
 
   public GuiButtonConfigEnum(int index, String title, int x, int y, Class<T> enumClass, T value) {
-    super(index, x, y, SIZE, SIZE, "");
+    super(index, x, y, null);
     this.value = value;
     this.possibleValues = ImmutableList.copyOf(enumClass.getEnumConstants());
     this.title = title;
 
-    if (this.value.getIcon() != null) {
+    if (this.value.getIcon() == null) {
       this.displayString = this.value.getDisplayName();
     }
+
+    this.setIcon(this.value.getIcon());
   }
 
   public T cycle() {
     int newOrdinal = (value.ordinal() + 1) % possibleValues.size();
     this.value = possibleValues.get(newOrdinal);
-    this.displayString = this.value.getIcon() != null ? this.value.getDisplayName() : "";
+    this.displayString = this.value.getIcon() == null ? this.value.getDisplayName() : "";
+    this.setIcon(this.value.getIcon());
     return this.value;
   }
 
   @Override
-  public void drawButton(Minecraft mc, int mouseX, int mouseY, float partialTicks) {
-    super.drawButton(mc, mouseX, mouseY, partialTicks);
-    if (value.getIcon() != null) {
-      value.getIcon().render(mc.currentScreen, this.x + 2, this.y + 2);
-    }
-  }
-
-  public void drawTooltip(GuiScreen gui, int mouseX, int mouseY) {
-    gui.drawHoveringText(
-        ImmutableList.of(this.title, TextFormatting.GRAY + this.value.getDescription()),
-        mouseX,
-        mouseY);
+  public List<String> getTooltipLines() {
+    return ImmutableList.of(this.title, TextFormatting.GRAY + this.value.getDescription());
   }
 }

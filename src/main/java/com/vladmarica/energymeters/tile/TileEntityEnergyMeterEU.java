@@ -46,6 +46,11 @@ public class TileEntityEnergyMeterEU extends TileEntityEnergyMeterBase {
   }
 
   @Override
+  public int getEnergyScale() {
+    return 1;
+  }
+
+  @Override
   public void onChunkUnload() {
     super.onChunkUnload();
     this.removeFromEnergyNet();

@@ -14,4 +14,9 @@ public class EnergyTypeFE extends EnergyType {
   public boolean isAvailable() {
     return true;
   }
+
+  @Override
+  public boolean isLimitable() {
+    return true;
+  }
 }

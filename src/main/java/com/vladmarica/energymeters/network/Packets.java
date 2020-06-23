@@ -24,6 +24,12 @@ public class Packets {
         PacketUpdateMeterConfig.class,
         packetId++,
         Side.SERVER);
+
+    EnergyMetersMod.NETWORK.registerMessage(
+        PacketUpdateRateLimit.Handler.class,
+        PacketUpdateRateLimit.class,
+        packetId++,
+        Side.SERVER);
   }
 
   private Packets() {}

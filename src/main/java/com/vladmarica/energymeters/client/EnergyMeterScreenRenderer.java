@@ -74,7 +74,7 @@ public class EnergyMeterScreenRenderer extends TileEntitySpecialRenderer<TileEnt
     if (tile.isDisabled()) {
       fontRenderer.drawString(DISABLED_TEXT, (SCREEN_SIZE - disabledTextWidth) / 2, 20, WHITE);
     } else {
-      String displayText = formatRate(tile.getTransferRate());
+      String displayText = formatRate(tile.getTransferRate() / (float) tile.getEnergyScale());
       int displayTextWidth = fontRenderer.getStringWidth(displayText);
       fontRenderer.drawString(TextFormatting.WHITE + displayText, (SCREEN_SIZE - displayTextWidth) / 2, 15, WHITE);
       fontRenderer.drawString(TextFormatting.WHITE + tile.getEnergyAlias().getDisplayName() + "/t", (SCREEN_SIZE - 22) / 2, 25, WHITE);

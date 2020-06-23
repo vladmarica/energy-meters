@@ -33,4 +33,17 @@ public class Util {
 
     return null;
   }
+
+  public static boolean isValidRateLimitString(String s) {
+    if (s.isEmpty()) {
+      return true;
+    }
+
+    try {
+      int limit = Integer.parseInt(s);
+      return limit >= 0;
+    } catch (NumberFormatException ex) {
+      return false;
+    }
+  }
 }

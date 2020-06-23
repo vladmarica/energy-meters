@@ -58,6 +58,8 @@ public abstract class TileEntityEnergyMeterBase extends TileEntity implements IT
   /** The name of this component as it appears to mods like OpenComputers and ComputerCraft. */
   protected static final String COMPUTER_COMPONENT_NAME = "energy-meter";
 
+  public static final int UNLIMITED_RATE = -1;
+
   protected static final String NBT_CONNECTED_KEY = "connected";
   protected static final String NBT_POWERED_KEY = "powered";
   protected static final String NBT_INPUT_SIDE_KEY = "input-side";
@@ -65,6 +67,7 @@ public abstract class TileEntityEnergyMeterBase extends TileEntity implements IT
   protected static final String NBT_TOTAL_ENERGY_TRANSFERRED_KEY = "total-energy-transferred";
   protected static final String NBT_REDSTONE_CONTROL_STATE = "redstone-control-state";
   protected static final String NBT_ENERGY_ALIAS = "energy-alias";
+  protected static final String NBT_RATE_LIMIT_KEY = "rate-limit";
 
   protected static final String NBT_OWNER_UUID = "owner-uuid";
   protected static final String NBT_OWNER_USERNAME = "owner-username";
@@ -101,6 +104,8 @@ public abstract class TileEntityEnergyMeterBase extends TileEntity implements IT
   protected EnumRedstoneControlState redstoneControlState = EnumRedstoneControlState.ACTIVE;
   protected EnergyAlias energyAlias;
 
+  protected int rateLimit = UNLIMITED_RATE;
+
   protected TargetPoint packetTargetPoint;
 
   private ComputerComponent computerComponent;
@@ -124,6 +129,7 @@ public abstract class TileEntityEnergyMeterBase extends TileEntity implements IT
     this.totalEnergyTransferred = tag.getLong(NBT_TOTAL_ENERGY_TRANSFERRED_KEY);
     this.redstoneControlState = EnumRedstoneControlState.values()[tag.getInteger(NBT_REDSTONE_CONTROL_STATE)];
     this.energyAlias = this.energyType.getAlias(tag.getInteger(NBT_ENERGY_ALIAS));
+    this.rateLimit = tag.getInteger(NBT_RATE_LIMIT_KEY);
 
     this.totalEnergyTransferredLastTick = this.totalEnergyTransferred;
     this.saved = true;
@@ -137,6 +143,7 @@ public abstract class TileEntityEnergyMeterBase extends TileEntity implements IT
     tag.setLong(NBT_TOTAL_ENERGY_TRANSFERRED_KEY, this.totalEnergyTransferred);
     tag.setInteger(NBT_REDSTONE_CONTROL_STATE, this.redstoneControlState.ordinal());
     tag.setInteger(NBT_ENERGY_ALIAS, this.energyAlias.getIndex());
+    tag.setInteger(NBT_RATE_LIMIT_KEY, this.rateLimit);
     return tag;
   }
 
@@ -150,6 +157,7 @@ public abstract class TileEntityEnergyMeterBase extends TileEntity implements IT
     tag.setLong(NBT_TOTAL_ENERGY_TRANSFERRED_KEY, this.totalEnergyTransferred);
     tag.setInteger(NBT_REDSTONE_CONTROL_STATE, this.redstoneControlState.ordinal());
     tag.setInteger(NBT_ENERGY_ALIAS, this.energyAlias.getIndex());
+    tag.setInteger(NBT_RATE_LIMIT_KEY, this.rateLimit);
     return tag;
   }
 
@@ -162,6 +170,7 @@ public abstract class TileEntityEnergyMeterBase extends TileEntity implements IT
     this.totalEnergyTransferred = tag.getLong(NBT_TOTAL_ENERGY_TRANSFERRED_KEY);
     this.redstoneControlState = EnumRedstoneControlState.values()[tag.getInteger(NBT_REDSTONE_CONTROL_STATE)];
     this.energyAlias = energyType.getAlias(tag.getInteger(NBT_ENERGY_ALIAS));
+    this.rateLimit = tag.getInteger(NBT_RATE_LIMIT_KEY);
   }
 
   /**
@@ -300,6 +309,8 @@ public abstract class TileEntityEnergyMeterBase extends TileEntity implements IT
     this.world.notifyNeighborsOfStateChange(this.pos, Blocks.ENERGY_METER, false);
   }
 
+  public abstract int getEnergyScale();
+
   protected abstract void checkConnections();
 
   /**
@@ -374,6 +385,14 @@ public abstract class TileEntityEnergyMeterBase extends TileEntity implements IT
     this.outputSide = side;
   }
 
+  public int getRateLimit() {
+    return this.rateLimit;
+  }
+
+  public void setRateLimit(int limit) {
+    this.rateLimit = limit;
+  }
+
   public void handleSideUpdateRequest(@Nullable EnumFacing inputSide, @Nullable EnumFacing outputSide) {
     if (this.world.isRemote) {
       throw new IllegalStateException("Should not have received side update packet on the client");
@@ -409,9 +428,29 @@ public abstract class TileEntityEnergyMeterBase extends TileEntity implements IT
     this.world.notifyNeighborsOfStateChange(this.pos, Blocks.ENERGY_METER, false);
   }
 
+  public void handleRateLimitChangeRequest(int newRateLimit) {
+    if (this.world.isRemote) {
+      throw new IllegalStateException("Should not have received rate limit update packet on the client");
+    }
+
+    if (newRateLimit < 0 && newRateLimit != UNLIMITED_RATE) {
+      newRateLimit = UNLIMITED_RATE;
+    }
+
+    this.rateLimit = newRateLimit;
+
+    this.checkConnections();
+    this.markDirty();
+
+    IBlockState state = this.world.getBlockState(this.pos);
+    this.world.notifyBlockUpdate(pos, state, state, 3);
+    this.world.notifyNeighborsOfStateChange(this.pos, Blocks.ENERGY_METER, false);
+  }
+
   public boolean isFullyConnected() {
     return this.fullyConnected;
   }
+
 
   public boolean canReceive(EnumFacing side) {
     return side == this.inputSide && this.isFullyConnected() && !this.isDisabled();

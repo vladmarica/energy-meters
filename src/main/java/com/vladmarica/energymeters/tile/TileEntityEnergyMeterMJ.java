@@ -29,6 +29,11 @@ public class TileEntityEnergyMeterMJ extends TileEntityEnergyMeterBase {
   }
 
   @Override
+  public int getEnergyScale() {
+    return 10;
+  }
+
+  @Override
   public boolean canReceiveEnergy(EnumFacing side) {
     return true;
   }
@@ -48,12 +53,12 @@ public class TileEntityEnergyMeterMJ extends TileEntityEnergyMeterBase {
     BlockPos outputNeightbor = this.pos.offset(this.outputSide);
     IMjReceiver outputReciever = BuildcraftIntegration.getMJReciever(this.world, outputNeightbor, this.outputSide.getOpposite());
     if (outputReciever != null && outputReciever.canReceive()) {
-      amountTransferred = amount - outputReciever.receivePower(amount, simulate);
+      long amountToSend = this.rateLimit == UNLIMITED_RATE ? amount : Math.min(amount, this.rateLimit * MjAPI.MJ);
+      amountTransferred = amountToSend - outputReciever.receivePower(amountToSend, simulate);
     }
 
-
     if (!simulate) {
-      long amountTransferredMJ = amountTransferred / MjAPI.MJ;
+      long amountTransferredMJ = (long) (((double) amountTransferred) / MjAPI.MJ * this.getEnergyScale());
       this.totalEnergyTransferred += amountTransferredMJ;
     }
 
@@ -87,6 +92,8 @@ public class TileEntityEnergyMeterMJ extends TileEntityEnergyMeterBase {
   @Override
   public void handleSideUpdateRequest(@Nullable EnumFacing inputSide, @Nullable EnumFacing outputSide) {
     super.handleSideUpdateRequest(inputSide, outputSide);
+    this.inputMJStorage = new MJStorage(this, this.inputSide, false);
+    this.outputMJStorage = new MJStorage(this, this.outputSide, true);
   }
 
   @Override

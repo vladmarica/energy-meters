@@ -28,6 +28,11 @@ public class TileEntityEnergyMeterFE extends TileEntityEnergyMeterBase {
   }
 
   @Override
+  public int getEnergyScale() {
+    return 1;
+  }
+
+  @Override
   public long receiveEnergy(long amount, boolean simulate, EnumFacing side) {
     if (!isFullyConnected() || side != this.inputSide || this.isDisabled()) {
       return 0;
@@ -37,7 +42,8 @@ public class TileEntityEnergyMeterFE extends TileEntityEnergyMeterBase {
     BlockPos outputBlockPos = this.pos.add(this.outputSide.getDirectionVec());
     IEnergyStorage adjacentEnergyStorage = Util.getEnergyStorage(this.world, outputBlockPos, outputSide.getOpposite());
     if (adjacentEnergyStorage != null) {
-      amountReceived = adjacentEnergyStorage.receiveEnergy((int) amount, simulate); // TODO: is this cast unsafe?
+      long amountToSend = this.rateLimit == UNLIMITED_RATE ? amount : Math.min(amount, this.rateLimit);
+      amountReceived = adjacentEnergyStorage.receiveEnergy((int) amountToSend, simulate); // TODO: is this cast unsafe?
     } else {
       amountReceived = 0;
     }

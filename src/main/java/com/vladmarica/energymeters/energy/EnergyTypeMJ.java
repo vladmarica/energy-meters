@@ -12,4 +12,9 @@ public class EnergyTypeMJ extends EnergyType {
   public boolean isAvailable() {
     return Loader.isModLoaded(ModIDs.BUILDCRAFT);
   }
+
+  @Override
+  public boolean isLimitable() {
+    return true;
+  }
 }
