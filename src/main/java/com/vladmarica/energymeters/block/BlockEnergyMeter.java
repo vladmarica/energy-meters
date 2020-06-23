@@ -189,6 +189,12 @@ public class BlockEnergyMeter extends BlockBase {
     }
   }
 
+  @Override
+  public int damageDropped(IBlockState state) {
+    MeterType type = state.getValue(PROP_TYPE);
+    return type.getIndex();
+  }
+
   @SideOnly(Side.CLIENT)
   public void registerItemModel(Item item) {
     for (MeterType type : MeterType.values()) {

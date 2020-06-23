@@ -502,19 +502,31 @@ public abstract class TileEntityEnergyMeterBase extends TileEntity implements IT
   @Optional.Method(modid = ModIDs.OPENCOMPUTERS)
   @Callback(doc = "function():string -- returns the current redstone control state")
   public Object[] getRedstoneControlState(final Context context, final Arguments args) throws Exception {
-    return new Object[] { this.computerComponent.getRedstoneControlState() };
+    return this.computerComponent.getRedstoneControlState();
   }
 
   @Optional.Method(modid = ModIDs.OPENCOMPUTERS)
   @Callback(doc = "function():string -- returns the energy type, such as \"FE\" or \"MJ\"")
   public Object[] getEnergyType(final Context context, final Arguments args) throws Exception {
-    return new Object[] { this.computerComponent.getEnergyType() };
+    return this.computerComponent.getEnergyType();
   }
 
   @Optional.Method(modid = ModIDs.OPENCOMPUTERS)
   @Callback(doc = "function():string -- returns the current energy type alias, such as \"RF\"")
   public Object[] getEnergyTypeAlias(final Context context, final Arguments args) throws Exception {
-    return new Object[] { this.computerComponent.getEnergyTypeAlias() };
+    return this.computerComponent.getEnergyTypeAlias();
+  }
+
+  @Optional.Method(modid = ModIDs.OPENCOMPUTERS)
+  @Callback(doc = "function():number -- returns the current transfer rate limit or -1 if it is unlimited")
+  public Object[] getTransferRateLimit(final Context context, final Arguments args) throws Exception {
+    return this.computerComponent.getTransferRateLimit();
+  }
+
+  @Optional.Method(modid = ModIDs.OPENCOMPUTERS)
+  @Callback(doc = "function():bool -- attempts to set the transfer rate limit for this meter. Pass -1 to set it to unlimited. Returns a boolean indicating success.")
+  public Object[] setTransferRateLimit(final Context context, final Arguments args) throws Exception {
+    return this.computerComponent.setTransferRateLimit(args.checkInteger(0)) ;
   }
   // End OpenComputers SimpleComponent implementation
 }

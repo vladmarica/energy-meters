@@ -2,6 +2,7 @@ package com.vladmarica.energymeters.integration;
 
 import com.vladmarica.energymeters.EnergyMetersMod;
 import com.vladmarica.energymeters.tile.TileEntityEnergyMeterBase;
+import dan200.computercraft.api.lua.ArgumentHelper;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
@@ -21,11 +22,11 @@ public class ComputerComponent implements IPeripheral {
   }
 
   public Object[] getTransferRate()  {
-    return new Object[] { this.meter.getTransferRate() };
+    return new Object[] { this.meter.getTransferRate() / this.meter.getEnergyScale() };
   }
 
   public Object[] getTotalEnergyTransferred() {
-    return new Object[] { this.meter.getTotalEnergyTransferred() };
+    return new Object[] { this.meter.getTotalEnergyTransferred() / this.meter.getEnergyScale() };
   }
 
   public Object[] getStatus() {
@@ -50,6 +51,23 @@ public class ComputerComponent implements IPeripheral {
     return new Object[] { this.meter.getEnergyAlias().getDisplayName() };
   }
 
+  public Object[] getTransferRateLimit() {
+    return new Object[] { this.meter.getRateLimit() };
+  }
+
+  public Object[] setTransferRateLimit(int limit) {
+    if (!this.meter.getEnergyType().isLimitable()) {
+      return new Object[] { false };
+    }
+
+    boolean rateValid = limit >= 0 || limit == TileEntityEnergyMeterBase.UNLIMITED_RATE;
+    if (rateValid) {
+      this.meter.handleRateLimitChangeRequest(limit);
+    }
+
+    return new Object[] { rateValid };
+  }
+
   @Optional.Method(modid = ModIDs.COMPUTERCRAFT)
   @Nonnull
   @Override
@@ -67,14 +85,16 @@ public class ComputerComponent implements IPeripheral {
         "getStatus",
         "getRedstoneControlState",
         "getEnergyType",
-        "getEnergyTypeAlias"
+        "getEnergyTypeAlias",
+        "getTransferRateLimit",
+        "setTransferRateLimit"
     };
   }
 
   @Optional.Method(modid = ModIDs.COMPUTERCRAFT)
   @Nullable
   @Override
-  public Object[] callMethod(@Nonnull IComputerAccess computer, @Nonnull ILuaContext context, int method, @Nonnull Object[] agrs) throws LuaException, InterruptedException {
+  public Object[] callMethod(@Nonnull IComputerAccess computer, @Nonnull ILuaContext context, int method, @Nonnull Object[] args) throws LuaException, InterruptedException {
     switch (method) {
       case 0:
         return this.getTransferRate();
@@ -88,6 +108,11 @@ public class ComputerComponent implements IPeripheral {
         return this.getEnergyType();
       case 5:
         return this.getEnergyTypeAlias();
+      case 6:
+        return this.getTransferRateLimit();
+      case 7: {
+        return this.setTransferRateLimit(ArgumentHelper.getInt(args, 0));
+      }
       default:
         EnergyMetersMod.LOGGER.error("Attempted to call unknownComputerCraft method {}", method);
         return null;
