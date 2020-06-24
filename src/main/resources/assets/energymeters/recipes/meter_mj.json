@@ -1,8 +1,11 @@
 {
   "type": "minecraft:crafting_shaped",
+  "conditions": [{
+    "type": "energymeters:buildcraft_installed"
+  }],
   "pattern": [
     "cgc",
-    "rir",
+    "pip",
     "ccc"
   ],
   "key": {
@@ -11,21 +14,21 @@
       "ore": "blockGlass"
     },
     "c": {
-      "item": "minecraft:cobblestone",
-      "data": 0
-    },
-    "r":  {
       "type": "forge:ore_dict",
-      "ore": "dustRedstone"
+      "ore": "plankWood"
+    },
+    "p":  {
+      "item": "buildcrafttransport:pipe_wood_power",
+      "data": "0"
     },
     "i":  {
       "type": "forge:ore_dict",
-      "ore": "blockIron"
+      "ore": "gearIron"
     }
   },
   "result": {
     "item": "energymeters:meter",
     "count": 1,
-    "data": 0
+    "data": 1
   }
 }

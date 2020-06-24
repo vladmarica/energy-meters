@@ -1,8 +1,11 @@
 {
   "type": "minecraft:crafting_shaped",
+  "conditions": [{
+    "type": "energymeters:ic2_installed"
+  }],
   "pattern": [
     "cgc",
-    "rir",
+    "pip",
     "ccc"
   ],
   "key": {
@@ -11,21 +14,21 @@
       "ore": "blockGlass"
     },
     "c": {
-      "item": "minecraft:cobblestone",
-      "data": 0
+      "item": "ic2:ingot",
+      "data": 5
     },
-    "r":  {
-      "type": "forge:ore_dict",
-      "ore": "dustRedstone"
+    "p":  {
+      "item": "ic2:cable",
+      "data": 1
     },
     "i":  {
-      "type": "forge:ore_dict",
-      "ore": "blockIron"
+      "item": "ic2:crafting",
+      "data": 1
     }
   },
   "result": {
     "item": "energymeters:meter",
     "count": 1,
-    "data": 0
+    "data": 2
   }
 }

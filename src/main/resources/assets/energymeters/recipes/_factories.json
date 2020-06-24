@@ -1,0 +1,6 @@
+{
+  "conditions": {
+    "buildcraft_installed": "com.vladmarica.energymeters.integration.ConditionFactoryBuildcraftLoaded",
+    "ic2_installed": "com.vladmarica.energymeters.integration.ConditionFactoryIC2Loaded"
+  }
+}
