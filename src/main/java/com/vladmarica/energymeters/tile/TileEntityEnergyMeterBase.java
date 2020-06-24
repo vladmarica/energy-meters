@@ -203,8 +203,6 @@ public abstract class TileEntityEnergyMeterBase extends TileEntity implements IT
    */
   @Override
   public void onLoad() {
-    EnergyMetersMod.LOGGER.info("EnergyMeter onLoad on {}", this.world.isRemote ? "client": "server");
-
     IBlockState state = this.world.getBlockState(pos);
     this.screenSide = state.getValue(BlockEnergyMeter.PROP_FACING);
 
@@ -524,7 +522,7 @@ public abstract class TileEntityEnergyMeterBase extends TileEntity implements IT
   }
 
   @Optional.Method(modid = ModIDs.OPENCOMPUTERS)
-  @Callback(doc = "function():bool -- attempts to set the transfer rate limit for this meter. Pass -1 to set it to unlimited. Returns a boolean indicating success.")
+  @Callback(doc = "function(limit:number):bool -- attempts to set the transfer rate limit for this meter. Pass -1 to set it to unlimited. Returns a boolean indicating success.")
   public Object[] setTransferRateLimit(final Context context, final Arguments args) throws Exception {
     return this.computerComponent.setTransferRateLimit(args.checkInteger(0)) ;
   }

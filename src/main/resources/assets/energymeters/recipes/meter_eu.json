@@ -5,7 +5,7 @@
   }],
   "pattern": [
     "cgc",
-    "pip",
+    "rir",
     "ccc"
   ],
   "key": {
@@ -17,9 +17,9 @@
       "item": "ic2:ingot",
       "data": 5
     },
-    "p":  {
-      "item": "ic2:cable",
-      "data": 1
+    "r":  {
+      "type": "forge:ore_dict",
+      "ore": "dustRedstone"
     },
     "i":  {
       "item": "ic2:crafting",

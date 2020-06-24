@@ -5,7 +5,7 @@
   }],
   "pattern": [
     "cgc",
-    "pip",
+    "rir",
     "ccc"
   ],
   "key": {
@@ -17,9 +17,9 @@
       "type": "forge:ore_dict",
       "ore": "plankWood"
     },
-    "p":  {
-      "item": "buildcrafttransport:pipe_wood_power",
-      "data": "0"
+    "r":  {
+      "type": "forge:ore_dict",
+      "ore": "dustRedstone"
     },
     "i":  {
       "type": "forge:ore_dict",

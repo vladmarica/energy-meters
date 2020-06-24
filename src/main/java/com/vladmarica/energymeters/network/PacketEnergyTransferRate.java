@@ -59,9 +59,6 @@ public class PacketEnergyTransferRate implements IMessage {
           TileEntityEnergyMeterBase energyMeterTile = (TileEntityEnergyMeterBase) tile;
           energyMeterTile.setTransferRate(rate);
           energyMeterTile.setTotalEnergyTransferred(totalEnergyTransferred);
-
-          EnergyMetersMod.LOGGER.info(
-              "Recieved PacketEnergyTransferRate for {} with rate {} FE/t", pos, rate);
         } else {
           EnergyMetersMod.LOGGER.error(
               "Recieved PacketEnergyTransferRate for position with no TE: {}", pos);
