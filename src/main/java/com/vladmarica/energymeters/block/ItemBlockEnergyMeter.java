@@ -18,6 +18,8 @@ import net.minecraft.world.World;
 public class ItemBlockEnergyMeter extends ItemBlock {
   public ItemBlockEnergyMeter(BlockEnergyMeter block) {
     super(block);
+    this.setHasSubtypes(true);
+    this.setMaxDamage(0);
   }
 
   @Override

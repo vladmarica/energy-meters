@@ -1,6 +1,5 @@
 package com.vladmarica.energymeters.block;
 
-import com.google.common.collect.ImmutableList;
 import com.vladmarica.energymeters.EnergyMetersMod;
 import com.vladmarica.energymeters.energy.EnergyType;
 import com.vladmarica.energymeters.energy.EnergyTypes;
@@ -20,8 +19,6 @@ import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.client.renderer.block.statemap.DefaultStateMapper;
-import net.minecraft.client.renderer.block.statemap.StateMapperBase;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -33,6 +30,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
@@ -61,8 +59,7 @@ public class BlockEnergyMeter extends BlockBase {
         .withProperty(PROP_FACING, EnumFacing.NORTH)
         .withProperty(PROP_TYPE, MeterType.FE_METER));
 
-    this.setHarvestLevel("pickaxe", 0);
-    this.setCreativeTab(CreativeTabs.SEARCH);
+    this.setHarvestLevel("pickaxe", 1);
   }
 
   @Override
@@ -193,6 +190,11 @@ public class BlockEnergyMeter extends BlockBase {
   public int damageDropped(IBlockState state) {
     MeterType type = state.getValue(PROP_TYPE);
     return type.getIndex();
+  }
+
+  public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player) {
+    MeterType type = state.getValue(PROP_TYPE);
+    return new ItemStack(Item.getItemFromBlock(this), 1, type.getIndex());
   }
 
   @SideOnly(Side.CLIENT)

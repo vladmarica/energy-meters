@@ -3,7 +3,6 @@ package com.vladmarica.energymeters.block;
 import com.vladmarica.energymeters.EnergyMetersMod;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;

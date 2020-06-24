@@ -1,5 +1,6 @@
 package com.vladmarica.energymeters;
 
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
@@ -30,6 +31,8 @@ public class EnergyMetersMod {
       serverSide = "com.vladmarica.energymeters.CommonProxy",
       clientSide = "com.vladmarica.energymeters.client.ClientProxy")
   public static CommonProxy PROXY;
+
+  public static final CreativeTabs CREATIVE_TAB = new EnergyMetersCreativeTab();
 
   @EventHandler
   public void preInit(FMLPreInitializationEvent event) {
