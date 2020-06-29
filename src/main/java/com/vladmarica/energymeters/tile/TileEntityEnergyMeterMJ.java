@@ -45,14 +45,42 @@ public class TileEntityEnergyMeterMJ extends TileEntityEnergyMeterBase {
   }
 
   @Override
+  public long getRequestedEnergy(EnumFacing side) {
+    if (!this.isFullyConnected() || this.isDisabled() || side == this.outputSide) {
+      return 0;
+    }
+
+    if (this.outputSide != null) {
+      // Query the amount of power requested from the output receiver
+      BlockPos outputNeighbor = this.pos.offset(this.outputSide);
+      IMjReceiver outputReciever =
+          BuildcraftIntegration.getMJReciever(
+              this.world, outputNeighbor, this.outputSide.getOpposite());
+
+      if (outputReciever != null && outputReciever.canReceive()) {
+        long powerRequested = outputReciever.getPowerRequested();
+        if (this.rateLimit != UNLIMITED_RATE) {
+          powerRequested = Math.min(powerRequested, this.rateLimit * MjAPI.MJ);
+        }
+        return powerRequested;
+      }
+    }
+
+    return 0;
+  }
+
+  @Override
   public long receiveEnergy(long amount, boolean simulate, EnumFacing side) {
     if (!isFullyConnected() || side != this.inputSide || this.isDisabled()) {
       return 0;
     }
 
     long amountTransferred = 0;
-    BlockPos outputNeightbor = this.pos.offset(this.outputSide);
-    IMjReceiver outputReciever = BuildcraftIntegration.getMJReciever(this.world, outputNeightbor, this.outputSide.getOpposite());
+    BlockPos outputNeighbor = this.pos.offset(this.outputSide);
+    IMjReceiver outputReciever =
+        BuildcraftIntegration.getMJReciever(
+            this.world, outputNeighbor, this.outputSide.getOpposite());
+
     if (outputReciever != null && outputReciever.canReceive()) {
       long amountToSend = this.rateLimit == UNLIMITED_RATE ? amount : Math.min(amount, this.rateLimit * MjAPI.MJ);
       amountTransferred = amountToSend - outputReciever.receivePower(amountToSend, simulate);

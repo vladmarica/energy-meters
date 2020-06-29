@@ -21,7 +21,7 @@ public class MJStorage implements IMjReceiver {
 
   @Override
   public long getPowerRequested() {
-    return MjAPI.MJ * 100000;
+    return this.meter.getRequestedEnergy(this.side);
   }
 
   @Override
