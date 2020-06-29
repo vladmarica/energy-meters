@@ -2,10 +2,10 @@
 {
   "modid": "energymeters",
   "name": "Energy Meters",
-  "description": "A simple mod that adds energy meters that support FE, RF, MJ, EU, and more.",
+  "description": "Adds energy meters for measuring and limiting the throughput of, FE, RF, MJ, EU, and more.",
   "version": "1.0",
   "mcversion": "1.12.2",
-  "url": "",
+  "url": "https://github.com/vladmarica/energy-meters",
   "updateUrl": "",
   "authorList": ["Quintinity"],
   "credits": "",
