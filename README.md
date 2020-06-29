@@ -1,5 +1,8 @@
 # Energy Meters
 
+[![](https://img.shields.io/badge/CurseForge-1.12.x-red.svg?style=flat-square&logo=conda-forge)](https://www.curseforge.com/minecraft/mc-mods/energy-meters)
+
+
 This is a mod for Minecraft **1.12** (and **1.15** soon) that adds energy meters for measuring and limiting the throughput of energy through various cable types.
 
 ![](https://i.imgur.com/xzstT81.png)
