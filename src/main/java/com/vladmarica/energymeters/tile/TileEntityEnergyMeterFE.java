@@ -2,6 +2,7 @@ package com.vladmarica.energymeters.tile;
 
 import com.vladmarica.energymeters.Util;
 import com.vladmarica.energymeters.energy.EnergyTypes;
+import com.vladmarica.energymeters.energy.storage.ForgeEnergyStorage;
 import javax.annotation.Nullable;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;

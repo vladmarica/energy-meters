@@ -1,4 +1,4 @@
-package com.vladmarica.energymeters.tile;
+package com.vladmarica.energymeters.energy.storage;
 
 import com.vladmarica.energymeters.energy.IEnergyMeter;
 import net.minecraft.util.EnumFacing;

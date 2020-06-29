@@ -23,6 +23,14 @@ public interface IEnergyMeter {
    */
   long receiveEnergy(long amount, boolean simulate, EnumFacing side);
 
+  /**
+   * Returns the amount of energy requested on the given side. Not all implementations will need
+   * need to override this, since not all energy systems have the concept of "requesting power".
+   */
+  default long getRequestedEnergy(EnumFacing side) {
+    return 0;
+  }
+
   BlockPos getPosition();
 
   World getWorldObj();

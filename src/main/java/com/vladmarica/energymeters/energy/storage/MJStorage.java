@@ -1,9 +1,8 @@
-package com.vladmarica.energymeters.tile;
+package com.vladmarica.energymeters.energy.storage;
 
 import buildcraft.api.mj.IMjConnector;
 import buildcraft.api.mj.IMjReceiver;
 import buildcraft.api.mj.MjAPI;
-import com.vladmarica.energymeters.EnergyMetersMod;
 import com.vladmarica.energymeters.energy.IEnergyMeter;
 import javax.annotation.Nonnull;
 import net.minecraft.util.EnumFacing;

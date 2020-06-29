@@ -2,6 +2,7 @@ package com.vladmarica.energymeters.tile;
 
 import com.vladmarica.energymeters.EnergyMetersMod;
 import com.vladmarica.energymeters.energy.EnergyTypes;
+import com.vladmarica.energymeters.energy.storage.EUStorage;
 import com.vladmarica.energymeters.tile.config.EnumRedstoneControlState;
 import ic2.api.energy.EnergyNet;
 import ic2.api.energy.NodeStats;
@@ -15,7 +16,7 @@ import net.minecraftforge.common.MinecraftForge;
 
 public class TileEntityEnergyMeterEU extends TileEntityEnergyMeterBase {
 
-  private EUEnergyStorage storage;
+  private EUStorage storage;
   private boolean addedToIC2EnergyNet = false;
 
   public TileEntityEnergyMeterEU() {
@@ -24,7 +25,7 @@ public class TileEntityEnergyMeterEU extends TileEntityEnergyMeterBase {
 
   @Override
   public void onLoad() {
-    this.storage = new EUEnergyStorage(this);
+    this.storage = new EUStorage(this);
 
     super.onLoad();
 

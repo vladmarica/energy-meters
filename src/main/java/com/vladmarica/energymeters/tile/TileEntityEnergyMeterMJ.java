@@ -4,6 +4,7 @@ import buildcraft.api.mj.IMjConnector;
 import buildcraft.api.mj.IMjReceiver;
 import buildcraft.api.mj.MjAPI;
 import com.vladmarica.energymeters.energy.EnergyTypes;
+import com.vladmarica.energymeters.energy.storage.MJStorage;
 import com.vladmarica.energymeters.integration.BuildcraftIntegration;
 import javax.annotation.Nullable;
 import net.minecraft.util.EnumFacing;

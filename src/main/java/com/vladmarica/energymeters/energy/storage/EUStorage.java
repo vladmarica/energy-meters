@@ -1,4 +1,4 @@
-package com.vladmarica.energymeters.tile;
+package com.vladmarica.energymeters.energy.storage;
 
 import com.vladmarica.energymeters.energy.IEnergyMeter;
 import ic2.api.energy.tile.IEnergyAcceptor;
@@ -9,11 +9,11 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class EUEnergyStorage implements IEnergyConductor, ILocatable {
+public class EUStorage implements IEnergyConductor, ILocatable {
 
   private IEnergyMeter meter;
 
-  public EUEnergyStorage(IEnergyMeter meter) {
+  public EUStorage(IEnergyMeter meter) {
     this.meter = meter;
   }
 
