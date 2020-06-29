@@ -37,8 +37,6 @@ minecraft {
     //mappings channel: 'snapshot', version: '20171003-1.12'
     mappings channel: 'snapshot', version: '20171003-1.12'
 
-    // accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
-
     runs {
         client {
             workingDirectory project.file('run')
@@ -66,47 +64,28 @@ repositories {
     maven { url = 'https://squiddev.cc/maven/' } // CC:Tweaked
     maven { url = 'https://mod-buildcraft.com/maven/' } // Buildcraft
     maven { url = 'http://maven.ic2.player.to/' } // IC2
+    maven { url = "http://chickenbones.net/maven/" }
+    maven { url = "http://maven.covers1624.net" } // COFH mods
 }
 
 dependencies {
-    // Specify the version of Minecraft to use, If this is any group other then 'net.minecraft' it is assumed
-    // that the dep is a ForgeGradle 'patcher' dependency. And it's patches will be applied.
-    // The userdev artifact is a special name and will get all sorts of transformations applied to it.
     minecraft 'net.minecraftforge:forge:1.12.2-14.23.5.2854'
 
     testImplementation 'org.junit.jupiter:junit-jupiter:5.6.2'
 
-    compileOnly 'li.cil.oc:OpenComputers:MC1.12.2-1.7.5+:api'
-    compileOnly 'net.industrial-craft:industrialcraft-2:2.8.220-ex112:api'
-    compileOnly fg.deobf('org.squiddev:cc-tweaked-1.12.2:1.89.0')
-    compileOnly fg.deobf('com.mod-buildcraft:buildcraft-api:7.99.24.6')
-
-    // You may put jars on which you depend on in ./libs or you may define them like so..
-    // compile "some.group:artifact:version:classifier"
-    // compile "some.group:artifact:version"
-
-    // Real examples
-    // compile 'com.mod-buildcraft:buildcraft:6.0.8:dev'  // adds buildcraft to the dev env
-    // compile 'com.googlecode.efficient-java-matrix-library:ejml:0.24' // adds ejml to the dev env
-
-    // The 'provided' configuration is for optional dependencies that exist at compile-time but might not at runtime.
-    // provided 'com.mod-buildcraft:buildcraft:6.0.8:dev'
-
-    // These dependencies get remapped to your current MCP mappings
-    // deobf 'com.mod-buildcraft:buildcraft:6.0.8:dev'
-
-    // For more info...
-    // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
-    // http://www.gradle.org/docs/current/userguide/dependency_management.html
+    // Compile-time dependencies (mod APIs)
+    compileOnly "li.cil.oc:OpenComputers:MC1.12.2-${opencomputers_api_version}:api"
+    compileOnly "net.industrial-craft:industrialcraft-2:${ic2_api_version}:api"
+    compileOnly fg.deobf("org.squiddev:cc-tweaked-1.12.2:${cc_tweaked_api_version}")
+    compileOnly fg.deobf("com.mod-buildcraft:buildcraft-api:${buildcraft_api_version}")
 }
 
-// Example for how to get properties into the manifest for reading by the runtime..
 jar {
     manifest {
         attributes([
             "Specification-Title": "energymeters",
             "Specification-Vendor": "com.vladmarica",
-            "Specification-Version": "1", // We are version 1 of ourselves
+            "Specification-Version": "1",
             "Implementation-Title": project.name,
             "Implementation-Version": "${version}",
             "Implementation-Vendor" :"com.vladmarica",
