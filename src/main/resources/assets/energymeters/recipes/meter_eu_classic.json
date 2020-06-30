@@ -2,7 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "conditions": [{
     "type": "forge:mod_loaded",
-    "modid": "buildcraftcore"
+    "modid": "ic2"
   }],
   "pattern": [
     "cgc",
@@ -16,20 +16,19 @@
     },
     "c": {
       "type": "forge:ore_dict",
-      "ore": "plankWood"
+      "ore": "ingotRefinedIron"
     },
     "r":  {
       "type": "forge:ore_dict",
       "ore": "dustRedstone"
     },
     "i":  {
-      "type": "forge:ore_dict",
-      "ore": "gearIron"
+      "item": "#IC2_BASIC_CIRCUIT"
     }
   },
   "result": {
     "item": "energymeters:meter",
     "count": 1,
-    "data": 1
+    "data": 2
   }
 }

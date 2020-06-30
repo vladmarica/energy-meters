@@ -1,0 +1,30 @@
+[
+  {
+    "name": "IC2_BASIC_CIRCUIT",
+    "conditions": [{
+      "type": "forge:mod_loaded",
+      "modid": "ic2"
+    }, {
+      "type": "forge:not",
+      "value": {
+        "type": "forge:mod_loaded",
+        "modid": "ic2-classic-spmod"
+      }
+    }],
+    "ingredient": {
+      "item": "ic2:crafting",
+      "data": 1
+    }
+  },
+  {
+    "name": "IC2_BASIC_CIRCUIT",
+    "conditions": [{
+      "type": "forge:mod_loaded",
+      "modid": "ic2-classic-spmod"
+    }],
+    "ingredient": {
+      "item": "ic2:itemmisc",
+      "data": 451
+    }
+  }
+]

@@ -67,7 +67,7 @@ public class TileEntityEnergyMeterEU extends TileEntityEnergyMeterBase {
     if (!this.world.isRemote && this.addedToIC2EnergyNet) {
       MinecraftForge.EVENT_BUS.post(new EnergyTileUnloadEvent(this.storage));
       this.addedToIC2EnergyNet = false;
-      EnergyMetersMod.LOGGER.info("Remove EU meter {} from energy net", this.pos);
+      EnergyMetersMod.LOGGER.debug("Remove EU meter {} from energy net", this.pos);
     }
   }
 
@@ -75,7 +75,7 @@ public class TileEntityEnergyMeterEU extends TileEntityEnergyMeterBase {
     if (!this.world.isRemote && !this.addedToIC2EnergyNet) {
       MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this.storage));
       this.addedToIC2EnergyNet = true;
-      EnergyMetersMod.LOGGER.info("Added EU meter {} from energy net", this.pos);
+      EnergyMetersMod.LOGGER.debug("Added EU meter {} from energy net", this.pos);
     }
   }
 

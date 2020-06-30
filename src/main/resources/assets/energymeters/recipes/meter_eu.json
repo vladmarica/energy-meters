@@ -1,8 +1,18 @@
 {
   "type": "minecraft:crafting_shaped",
-  "conditions": [{
-    "type": "energymeters:ic2_installed"
-  }],
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "ic2"
+    },
+    {
+      "type": "forge:not",
+      "value": {
+        "type": "forge:mod_loaded",
+        "modid": "ic2-classic-spmod"
+      }
+    }
+  ],
   "pattern": [
     "cgc",
     "rir",
@@ -14,16 +24,15 @@
       "ore": "blockGlass"
     },
     "c": {
-      "item": "ic2:ingot",
-      "data": 5
+      "type": "forge:ore_dict",
+      "ore": "plateIron"
     },
-    "r":  {
+    "r": {
       "type": "forge:ore_dict",
       "ore": "dustRedstone"
     },
     "i":  {
-      "item": "ic2:crafting",
-      "data": 1
+      "item": "#IC2_BASIC_CIRCUIT"
     }
   },
   "result": {

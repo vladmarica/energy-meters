@@ -38,9 +38,9 @@ Works with:
 
 - Energy Unit (EU) - *from [IndustrialCraft 2](https://www.curseforge.com/minecraft/mc-mods/industrial-craft)*
 
-![](https://i.imgur.com/ZXWTUb2.png)
+![](https://i.imgur.com/50Gwjch.png)
 
-Only available if IC2 is installed, of course.
+Only available if IC2 is installed, of course. When using the Classic profile, the recipe uses _Refined Iron_ instead of _Iron Plates_.
 
 Due to the way the IC2 EU system works, you cannot set a limit on EU meters.
 
