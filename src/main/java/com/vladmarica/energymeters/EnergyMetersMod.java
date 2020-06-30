@@ -18,7 +18,7 @@ import org.apache.logging.log4j.Logger;
 public class EnergyMetersMod {
   public static final String MODID = "energymeters";
   public static final String NAME = "Forge Energy Meters";
-  public static final String VERSION = "1.0";
+  public static final String VERSION = "1.0.1";
 
   public static final Logger LOGGER = LogManager.getLogger(MODID);
   public static final SimpleNetworkWrapper NETWORK =

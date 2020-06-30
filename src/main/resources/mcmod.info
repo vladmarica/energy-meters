@@ -3,7 +3,7 @@
   "modid": "energymeters",
   "name": "Energy Meters",
   "description": "Adds energy meters for measuring and limiting the throughput of, FE, RF, MJ, EU, and more.",
-  "version": "1.0",
+  "version": "1.0.1",
   "mcversion": "1.12.2",
   "url": "https://github.com/vladmarica/energy-meters",
   "updateUrl": "",
