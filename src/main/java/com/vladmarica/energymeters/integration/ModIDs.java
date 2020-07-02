@@ -9,5 +9,6 @@ public class ModIDs {
   public static final String TECHREBORN = "techreborn";
   public static final String MEKANISM = "mekanism";
   public static final String IMMERSIVE_ENGINEERING = "immersiveengineering";
+  public static final String BETTER_BUILDERS_WANDS = "betterbuilderswands";
 
 }

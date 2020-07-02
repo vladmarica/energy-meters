@@ -3,6 +3,7 @@ package com.vladmarica.energymeters.block;
 import com.vladmarica.energymeters.EnergyMetersMod;
 import com.vladmarica.energymeters.energy.EnergyType;
 import com.vladmarica.energymeters.energy.EnergyTypes;
+import com.vladmarica.energymeters.integration.ModIDs;
 import com.vladmarica.energymeters.properties.UnlistedPropertyBoolean;
 import com.vladmarica.energymeters.properties.UnlistedPropertyFacing;
 import com.vladmarica.energymeters.tile.TileEntityEnergyMeterBase;
@@ -37,6 +38,7 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.property.ExtendedBlockState;
 import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -99,8 +101,29 @@ public class BlockEnergyMeter extends BlockBase {
   @Override
   public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing facing,
       float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
+
     MeterType meterType = MeterType.values()[meta];
     return this.getDefaultState().withProperty(PROP_TYPE, meterType);
+  }
+
+  @Override
+  public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX,
+      float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand) {
+
+    /*
+     * Terrible, hacky fix for when using Better Builder's Wands. It appears that the mod incorrectly
+     * calls 'getStateForPlacement' using world metadata instead of itemstack metadata. The easiest
+     * (and ugliest) workaround is to check the stack trace and call `getStateFromMeta` is the the
+     * caller is 'portablejim.bbw.core.WandWorker'.
+     */
+    if (Loader.isModLoaded(ModIDs.BETTER_BUILDERS_WANDS)) {
+      StackTraceElement[] stack = Thread.currentThread().getStackTrace();
+      if (stack.length > 2 && stack[2].getClassName().equals("portablejim.bbw.core.WandWorker")) {
+          return this.getStateFromMeta(meta);
+      }
+    }
+
+    return this.getStateForPlacement(world, pos, facing, hitX, hitY, hitZ, meta, placer);
   }
 
   @Override
@@ -163,12 +186,6 @@ public class BlockEnergyMeter extends BlockBase {
     }
 
     return facing;
-  }
-
-  @Override
-  public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX,
-      float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand) {
-    return super.getStateForPlacement(world, pos, facing, hitX, hitY, hitZ, meta, placer, hand);
   }
 
   @Override
