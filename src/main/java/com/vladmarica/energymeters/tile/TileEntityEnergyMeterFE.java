@@ -49,7 +49,10 @@ public class TileEntityEnergyMeterFE extends TileEntityEnergyMeterBase {
       amountReceived = 0;
     }
 
-    this.totalEnergyTransferred += amountReceived;
+    if (!simulate) {
+      this.totalEnergyTransferred += amountReceived;
+    }
+
     return amountReceived;
   }
 
