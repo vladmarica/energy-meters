@@ -8,6 +8,7 @@ public class EnergyTypeFE extends EnergyType {
     super("FE", "Forge Energy");
     this.addAlias("RF", "Redstone Flux");
     this.addAlias("µI", "Micro Infinity", () -> Loader.isModLoaded(ModIDs.ENDERIO));
+    this.addAlias("IF", "Immersive Flux", () -> Loader.isModLoaded(ModIDs.IMMERSIVE_ENGINEERING));
   }
 
   @Override
