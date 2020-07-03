@@ -131,7 +131,7 @@ public class BlockEnergyMeter extends BlockBase {
     int facingIndex = meta & 0b11;
     int typeIndex = (meta & 0b1100) >> 2;
     return getDefaultState()
-        .withProperty(PROP_FACING, EnumFacing.getHorizontal(facingIndex))
+        .withProperty(PROP_FACING, EnumFacing.byHorizontalIndex(facingIndex))
         .withProperty(PROP_TYPE, MeterType.values()[typeIndex]);
   }
 

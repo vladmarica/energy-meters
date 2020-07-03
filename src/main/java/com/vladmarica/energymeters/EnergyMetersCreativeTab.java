@@ -11,7 +11,7 @@ public class EnergyMetersCreativeTab extends CreativeTabs {
   }
 
   @Override
-  public ItemStack getTabIconItem() {
+  public ItemStack createIcon() {
     return new ItemStack(Item.getItemFromBlock(Blocks.ENERGY_METER));
   }
 }

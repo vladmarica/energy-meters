@@ -14,13 +14,13 @@ This is a mod for Minecraft **1.12** (and **1.15** soon) that adds energy meters
 There are currently 3 different meters available in the 1.12 version.
 
 ### **FE Meter**
-Works with (almost) all implementations of Forge Energy:
+Works with all implementations of Forge Energy:
 
 - Redstone Flux (RF) - *from various mods, including the [Thermal series](https://www.curseforge.com/minecraft/mc-mods/thermal-foundation)*
 - Micro Infinities (μI) - *from [Ender IO](https://www.curseforge.com/minecraft/mc-mods/ender-io)*
-- *and likely many more*
+- Immersive Flux (IF) - *from [Immersive Engineering](https://www.curseforge.com/minecraft/mc-mods/immersive-engineering)*
 
-Currently does **NOT** work properly with *Mekanism Universal Cables* and *Immersive Engineering Flux* - the numbers on the meter appear incorrectly.
+Also works with [Mekanism](https://www.curseforge.com/minecraft/mc-mods/immersive-engineering) Universal Cables.
 
 ![](https://i.imgur.com/oS9SxdN.png)
 

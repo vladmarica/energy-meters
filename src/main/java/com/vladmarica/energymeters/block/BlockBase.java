@@ -9,7 +9,7 @@ public abstract class BlockBase extends Block {
     super(material);
 
     this.setRegistryName(name);
-    this.setUnlocalizedName(String.format("%s.%s", EnergyMetersMod.MODID, name));
+    this.setTranslationKey(String.format("%s.%s", EnergyMetersMod.MODID, name));
     this.setHardness(1F);
     this.setCreativeTab(EnergyMetersMod.CREATIVE_TAB);
   }

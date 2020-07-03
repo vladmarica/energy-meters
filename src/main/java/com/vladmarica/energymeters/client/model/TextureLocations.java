@@ -39,7 +39,7 @@ public class TextureLocations {
   }
 
   public static ResourceLocation getGuiResource(ResourceLocation location) {
-    String path = location.getResourcePath();
-    return new ResourceLocation(location.getResourceDomain(), String.format("textures/%s.png", path));
+    String path = location.getPath();
+    return new ResourceLocation(location.getNamespace(), String.format("textures/%s.png", path));
   }
 }
