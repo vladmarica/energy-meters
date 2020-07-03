@@ -42,7 +42,7 @@ public class GuiButtonEnergyAlias extends GuiButton implements IHasTooltip {
   @Override
   public List<String> getTooltipLines() {
     return ImmutableList.of(
-        "Display Alias",
+        "Display Units",
         TextFormatting.GRAY + this.alias.getDisplayName() + " (" + this.alias.getDescription() + ")");
   }
 }
