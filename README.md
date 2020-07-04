@@ -5,9 +5,9 @@
 
 This is a mod for Minecraft **1.12** (and **1.15** soon) that adds energy meters for measuring and limiting the throughput of energy through various cable types.
 
-![](https://i.imgur.com/xzstT81.png)
+![](https://i.imgur.com/2u0FOkr.png)
 
-![](https://i.imgur.com/LgrCW9R.png)
+![](https://i.imgur.com/UmRJXkE.png)
 ---
 ## Meter Types
 
