@@ -5,7 +5,6 @@
 - Fixed FE meter interaction with Immersive Engineering Cables
 - Fixed a crash when looking at a meter while holding a Better Builder's Wand
 
-
 ### 1.0.1 - 29 June 2020
 - Fixed MJ meter drawing power even when none is requested downstream
 - Updated EU meter recipe
