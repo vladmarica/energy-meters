@@ -1,32 +1,35 @@
 package com.vladmarica.energymeters.block;
 
 import com.vladmarica.energymeters.EnergyMetersMod;
+import com.vladmarica.energymeters.block.BlockEnergyMeter.MeterType;
 import net.minecraft.block.Block;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroup;
 import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.registry.GameRegistry.ObjectHolder;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
+import net.minecraftforge.registries.ObjectHolder;
 
-@SuppressWarnings("unused")
-@Mod.EventBusSubscriber
+@EventBusSubscriber(modid = EnergyMetersMod.MODID, bus = Bus.MOD)
 @ObjectHolder(EnergyMetersMod.MODID)
-public final class Blocks {
+public class Blocks {
 
-  @ObjectHolder(BlockEnergyMeter.NAME)
-  public static BlockEnergyMeter ENERGY_METER;
+  @ObjectHolder("meter")
+  public static BlockEnergyMeter ENERGY_METER_FE;
 
   @SubscribeEvent
-  public static void onRegisterBlockEvent(RegistryEvent.Register<Block> event) {
-    event.getRegistry().register(new BlockEnergyMeter());
+  public static void onBlockRegistration(RegistryEvent.Register<Block> event) {
+    event.getRegistry().register(new BlockEnergyMeter(MeterType.FE_METER).setRegistryName("meter"));
   }
 
   @SubscribeEvent
-  public static void onRegisterItemsEvent(RegistryEvent.Register<Item> event) {
-    event.getRegistry().register(
-        new ItemBlockEnergyMeter(ENERGY_METER)
-            .setRegistryName(ENERGY_METER.getRegistryName()));
-  }
+  public static void onItemRegistration(RegistryEvent.Register<Item> event) {
+    Item.Properties props = new Item.Properties().group(ItemGroup.BUILDING_BLOCKS);
 
-  private Blocks() {}
+    BlockItem item = new BlockItem(ENERGY_METER_FE, props);
+    item.setRegistryName(ENERGY_METER_FE.getRegistryName());
+    event.getRegistry().register(item);
+  }
 }

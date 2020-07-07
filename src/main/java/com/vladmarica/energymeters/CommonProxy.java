@@ -1,22 +1,14 @@
 package com.vladmarica.energymeters;
 
-import com.vladmarica.energymeters.integration.ComputerCraftIntegration;
-import com.vladmarica.energymeters.integration.ModIDs;
-import com.vladmarica.energymeters.network.Packets;
-import com.vladmarica.energymeters.tile.TileEntityEnergyMeterEU;
-import com.vladmarica.energymeters.tile.TileEntityEnergyMeterFE;
-import com.vladmarica.energymeters.tile.TileEntityEnergyMeterMJ;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 
 public class CommonProxy {
+
+  public void init(FMLCommonSetupEvent event) {
+    EnergyMetersMod.LOGGER.info("CommonProxy init");
+  }
+
+  /*
   public void preInit(FMLPreInitializationEvent event) { }
 
   public void init(FMLInitializationEvent event) {
@@ -44,4 +36,5 @@ public class CommonProxy {
   public boolean handleEnergyBlockActivation(World world, BlockPos pos, EntityPlayer player) {
     return true;
   }
+  */
 }

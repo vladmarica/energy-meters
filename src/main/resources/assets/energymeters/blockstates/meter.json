@@ -1,34 +1,9 @@
 {
   "forge_marker": 1,
   "defaults": {
-    "model": "energymeters:meter"
+    "model": "energymeters:block/meter"
   },
   "variants": {
-    "normal": [{}],
-    "inventory": [{}],
-    "inventory_fe": [{}],
-    "inventory_mj": [{
-      "model": "energymeters:meter_mj"
-    }],
-    "inventory_eu": [{
-      "model": "energymeters:meter_eu"
-    }],
-    "facing": {
-      "north": {},
-      "south": {},
-      "west": {},
-      "east": {},
-      "up": {},
-      "down": {}
-    },
-    "type": {
-      "fe": {},
-      "mj": {
-        "model": "energymeters:meter_mj"
-      },
-      "eu": {
-        "model": "energymeters:meter_eu"
-      }
-    }
+    "": [{}]
   }
 }

@@ -6,3 +6,4 @@ log.txt
 .gradle/
 .idea/
 util/
+libs/

@@ -1,14 +1,14 @@
 package com.vladmarica.energymeters.energy.storage;
 
 import com.vladmarica.energymeters.energy.IEnergyMeter;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraftforge.energy.IEnergyStorage;
 
 public class ForgeEnergyStorage implements IEnergyStorage {
   private IEnergyMeter meter;
-  private EnumFacing side;
+  private Direction side;
 
-  public ForgeEnergyStorage(IEnergyMeter meter, EnumFacing side) {
+  public ForgeEnergyStorage(IEnergyMeter meter, Direction side) {
     this.meter = meter;
     this.side = side;
   }
