@@ -4,6 +4,11 @@
     "model": "energymeters:block/meter"
   },
   "variants": {
-    "": [{}]
+    "facing": {
+      "north": {},
+      "south": {},
+      "west": {},
+      "east": {}
+    }
   }
 }

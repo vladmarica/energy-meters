@@ -11,7 +11,9 @@ This is a mod for Minecraft **1.12** (and **1.15** soon) that adds energy meters
 ---
 ## Meter Types
 
-There are currently 3 different meters available in the 1.12 version.
+There is only 1 meter available in 1.14 and 1.15.
+
+There are 3 different meters available in the 1.12 version.
 
 ### **FE Meter**
 Works with all implementations of Forge Energy:
@@ -19,12 +21,15 @@ Works with all implementations of Forge Energy:
 - Redstone Flux (RF) - *from various mods, including the [Thermal series](https://www.curseforge.com/minecraft/mc-mods/thermal-foundation)*
 - Micro Infinities (μI) - *from [Ender IO](https://www.curseforge.com/minecraft/mc-mods/ender-io)*
 - Immersive Flux (IF) - *from [Immersive Engineering](https://www.curseforge.com/minecraft/mc-mods/immersive-engineering)*
+- _and more..._
 
-Also works with [Mekanism](https://www.curseforge.com/minecraft/mc-mods/immersive-engineering) Universal Cables.
+The meters are confirmed to work with the following Forge Energy cables:
+- [Mekanism](https://www.curseforge.com/minecraft/mc-mods/immersive-engineering) Universal Cables
+- [Powah!](https://www.curseforge.com/minecraft/mc-mods/powah) Energy Cables
 
 ![](https://i.imgur.com/oS9SxdN.png)
 
-### **MJ Meter**
+### **MJ Meter (1.12 only)**
 Works with:
 
 - Minecraft Joule (MJ) - *from [BuildCraft](https://www.curseforge.com/minecraft/mc-mods/buildcraft)*
@@ -33,7 +38,7 @@ Works with:
 
 Only available if BuildCraft is installed, of course.
 
-### **EU Meter**
+### **EU Meter (1.12 only)**
 Works with:
 
 - Energy Unit (EU) - *from [IndustrialCraft 2](https://www.curseforge.com/minecraft/mc-mods/industrial-craft)*

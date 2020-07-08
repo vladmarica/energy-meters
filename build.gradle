@@ -109,7 +109,7 @@ def format(String jar_name) {
 }
 
 def dev_mods = fileTree(dev_mods_dir).filter { it -> it.isFile() }.files.name.collect( { format(it) } )
-dev_mods = []
+// dev_mods = []
 
 dependencies {
     // Specify the version of Minecraft to use, If this is any group other then 'net.minecraft' it is assumed
@@ -120,7 +120,10 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter:5.6.2'
 
     // Deobfuscate each dev mod for runtime
-    dev_mods.each { runtimeOnly fg.deobf(it) }
+    dev_mods.each {
+        compileOnly fg.deobf(it)
+        runtimeOnly fg.deobf(it)
+    }
 
     // You may put jars on which you depend on in ./libs or you may define them like so..
     // compile "some.group:artifact:version:classifier"
